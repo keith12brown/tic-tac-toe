@@ -1,0 +1,29 @@
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    background-color: green;
+    grid-gap: 1rem;
+    padding: 1rem;
+    height: 18rem;
+    width: 18rem;
+}
+
+.winner {
+   display: block;
+   background-color: green;
+   height: 8rem;
+   width: 20rem;
+   font-size: larger;
+   text-align: center;
+   align-content: center;
+   justify-content: center;
+}
+
+.winner > span {
+    font-size: 5rem;
+    width: 40rem;
+    height: 20rem;
+    text-align: center;
+    position: relative;
+}
