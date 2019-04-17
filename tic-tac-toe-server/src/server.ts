@@ -1,3 +1,6 @@
+//
+// This is a modification of https://github.com/JonnyFox/websocket-node-express
+//
 import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
@@ -30,11 +33,11 @@ function createMessage(content:
 }
 
 function isPlayer(message: Move | Player | Opponent | ConnectionStatus | string): message is Player {
-    return (<Player>message).name !== undefined;
+    return (message as Player).name !== undefined;
 }
 
 function isMove(message: Move | Player | Opponent | ConnectionStatus | string): message is Player {
-    return (<Move>message).column !== undefined;
+    return (message as Move).column !== undefined;
 }
 
 wss.on('connection', (ws: WebSocket) => {
@@ -63,19 +66,19 @@ wss.on('connection', (ws: WebSocket) => {
                 console.log(`current client ${extWs.player.name}`)
                 wss.clients
                     .forEach(client => {
-                        let extClient = client as ExtWebSocket;
+                        const extClient = client as ExtWebSocket;
                         if (isPlayer) {
                             console.log(`filtering clients ${extClient.player.name}`);
                             const playerStarts = Math.random() > 0.5 ? true : false;
-                            if (client != ws && !extClient.player.opponent && !extWs.player.opponent) {
+                            if (client !== ws && !extClient.player.opponent && !extWs.player.opponent) {
                                 extClient.player.opponent = { opponent: extWs.player.name, isStarter: playerStarts };
                                 extClient.opponentSocket = ws;
                                 extWs.opponentSocket = extClient;
                                 extWs.player.opponent = { opponent: extClient.player.name, isStarter: !playerStarts };
-                                const msg = createMessage(<Opponent>extClient.player.opponent);
+                                const msg = createMessage(extClient.player.opponent as Opponent);
                                 console.log(`sending oppent message = ${msg}`)
                                 extClient.send(msg);
-                                sendMessage = createMessage(<Opponent>extWs.player.opponent);
+                                sendMessage = createMessage(extWs.player.opponent as Opponent);
                             }
                         }
                     });
@@ -113,5 +116,5 @@ setInterval(() => {
 
 //start our server
 server.listen({ port: process.env.PORT || 8999, host: process.env.HOST || 'localhost' }, () => {
-    console.log(`Server started on host ${(server.address() as WebSocket.AddressInfo).address} port ${(<WebSocket.AddressInfo>server.address()).port} :)`);
+    console.log(`Server started on host ${(server.address() as WebSocket.AddressInfo).address} port ${(server.address() as WebSocket.AddressInfo).port} :)`);
 });
