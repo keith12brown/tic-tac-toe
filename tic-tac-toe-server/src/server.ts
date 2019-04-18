@@ -67,19 +67,17 @@ wss.on('connection', (ws: WebSocket) => {
                 wss.clients
                     .forEach(client => {
                         const extClient = client as ExtWebSocket;
-                        if (isPlayer) {
-                            console.log(`filtering clients ${extClient.player.name}`);
-                            const playerStarts = Math.random() > 0.5 ? true : false;
-                            if (client !== ws && !extClient.player.opponent && !extWs.player.opponent) {
-                                extClient.player.opponent = { opponent: extWs.player.name, isStarter: playerStarts };
-                                extClient.opponentSocket = ws;
-                                extWs.opponentSocket = extClient;
-                                extWs.player.opponent = { opponent: extClient.player.name, isStarter: !playerStarts };
-                                const msg = createMessage(extClient.player.opponent as Opponent);
-                                console.log(`sending oppent message = ${msg}`)
-                                extClient.send(msg);
-                                sendMessage = createMessage(extWs.player.opponent as Opponent);
-                            }
+                        console.log(`filtering clients ${extClient.player.name}`);
+                        const playerStarts = Math.random() > 0.5 ? true : false;
+                        if (client !== ws && !extClient.player.opponent && !extWs.player.opponent) {
+                            extClient.player.opponent = { opponent: extWs.player.name, isStarter: playerStarts };
+                            extClient.opponentSocket = ws;
+                            extWs.opponentSocket = extClient;
+                            extWs.player.opponent = { opponent: extClient.player.name, isStarter: !playerStarts };
+                            const msg = createMessage(extClient.player.opponent as Opponent);
+                            console.log(`sending oppent message = ${msg}`)
+                            extClient.send(msg);
+                            sendMessage = createMessage(extWs.player.opponent as Opponent);
                         }
                     });
 
