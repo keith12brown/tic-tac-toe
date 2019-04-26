@@ -8,12 +8,7 @@ import {
   ConnectionStatus,
   Player
 } from '../../projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
-
-import { Subject, ConnectableObservable } from 'rxjs';
-import { Type } from '@angular/compiler/src/core';
-import { isContentQueryHost } from '@angular/core/src/render3/util';
-
-
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
