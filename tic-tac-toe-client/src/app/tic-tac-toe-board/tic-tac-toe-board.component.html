@@ -1,5 +1,8 @@
-Name: <input type="text" value={{initValue}} (mousedown)="onMouseDown()" (keyup)="onKeyUp($event)">
-<button (click)="clickConnect()" [disabled]="!canPlay()">Play</button>
+<mat-form-field [floatLabel]="true">
+  <input required type="text" matInput placeholder="Name" (keyup)="onKeyUp($event)">
+</mat-form-field>
+<br>
+<button mat-raised-button color="primary" (click)="clickConnect()" [disabled]="!canPlay()">Play</button>
 <br>
 <div *ngIf="mark">
   <span>Your are {{mark}}</span>

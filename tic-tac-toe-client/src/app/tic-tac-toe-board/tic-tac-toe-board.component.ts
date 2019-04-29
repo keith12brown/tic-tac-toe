@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChildren, QueryList, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, AfterViewInit, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WebSocketService } from '../websocket.service';
 import { Opponent, Move, TicTacToeMessage } from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
 import { TicTacToeTileComponent } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatButton, MatButtonModule, MatFormFieldModule } from '@angular/material';
 
 @Component({
   selector: 'app-tic-tac-toe-board',
@@ -18,8 +20,6 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
 
   messages = '';
 
-  initValue = 'enter name';
-
   opponent: Opponent;
 
   mark: string;
@@ -28,7 +28,7 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(TicTacToeTileComponent) ticTacToeTileComponents: QueryList<TicTacToeTileComponent>;
 
-  private player = '';
+  @Input() player = '';
 
   private connected = false;
 
@@ -81,19 +81,9 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
     this.clearBoard();
   }
 
-  onMouseDown() {
-    const target = <HTMLInputElement>event.target;
-    if (target.value === this.initValue) {
-      target.value = '';
-    }
-  }
-
-  onKeyUp() {
+  onKeyUp(event) {
     const target = <HTMLInputElement>event.target;
     this.player = target.value;
-    if (!this.player) {
-      target.value = this.initValue;
-    }
   }
 
   tileClick(move: Move) {
