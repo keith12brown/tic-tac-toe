@@ -1,17 +1,21 @@
-<mat-form-field [floatLabel]="true">
+<mat-form-field>
   <input required type="text" matInput placeholder="Name" (keyup)="onKeyUp($event)">
 </mat-form-field>
 <br>
-<button mat-raised-button color="primary" (click)="clickConnect()" [disabled]="!canPlay()">Play</button>
+<button mat-flat-button color="primary" (click)="clickConnect()" [disabled]="!canPlay()">Play</button>
 <br>
+<div *ngIf="connected; else notConnected">
+  <mat-icon color="primary" svgIcon="cloud"></mat-icon>
+</div>
+<ng-template #notConnected>
+  <mat-icon color="warn" svgIcon="cloud-off"></mat-icon>
+</ng-template>
 <div *ngIf="mark">
   <span>Your are {{mark}}</span>
   <br>
   <span>Opponent {{opponent.opponent}}</span>
   <br>
 </div>
-<br>
-<br>
 <div class=grid-container>
   <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="0"></app-tic-tac-toe-tile>
   <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="1"></app-tic-tac-toe-tile>

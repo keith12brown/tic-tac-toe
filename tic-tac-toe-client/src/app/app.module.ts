@@ -1,6 +1,7 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import {
   MatAutocompleteModule,
   MatBadgeModule,
@@ -16,7 +17,6 @@ import {
   MatExpansionModule,
   MatFormFieldModule,
   MatGridListModule,
-  MatIconModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
@@ -25,6 +25,8 @@ import {
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatRadioModule,
+  MatIconRegistry,
+  MatIconModule,
   MatRippleModule,
   MatSelectModule,
   MatSidenavModule,
@@ -51,8 +53,10 @@ import { TicTacToeTileComponent } from './tic-tac-toe-tile/tic-tac-toe-tile.comp
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     MatButtonModule,
     MatInputModule,
+    MatIconModule,
     MatFormFieldModule,
   ],
   exports: [

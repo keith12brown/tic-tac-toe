@@ -4,7 +4,8 @@ import { WebSocketService } from '../websocket.service';
 import { Opponent, Move, TicTacToeMessage } from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
 import { TicTacToeTileComponent } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatButton, MatButtonModule, MatFormFieldModule } from '@angular/material';
+import { MatButton, MatButtonModule, MatFormFieldModule, MatIconRegistry, MatIconModule } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tic-tac-toe-board',
@@ -30,11 +31,18 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
 
   @Input() player = '';
 
-  private connected = false;
+  connected = false;
 
   private replay = false;
 
-  constructor(private socket: WebSocketService) {}
+  constructor(private socket: WebSocketService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon(
+      'cloud',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-cloud-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'cloud-off',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-cloud_off-24px.svg'));
+  }
 
   ngAfterViewInit(): void {
     this.ticTacToeTileComponents.forEach((tile) => {
