@@ -23,7 +23,13 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
 
   opponent: Opponent;
 
-  mark: string;
+  public get mark(): string {
+    return this.opponent ? (this.opponent.isStarter ? 'o' : 'x') : '';
+  }
+
+  public get opponentMark(): string {
+    return this.opponent.isStarter ? 'x' : 'o';
+  }
 
   tiles: TicTacToeTileComponent[][] = [];
 
@@ -42,6 +48,12 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
     iconRegistry.addSvgIcon(
       'cloud-off',
       sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-cloud_off-24px.svg'));
+    iconRegistry.addSvgIcon(
+      'x',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/x.svg'));
+    iconRegistry.addSvgIcon(
+      'o',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/o.svg'));
   }
 
   ngAfterViewInit(): void {
@@ -56,7 +68,6 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.socket.opponentConnected$.subscribe((opp) => {
       this.opponent = opp;
-      this.mark = opp.isStarter ? 'O' : 'X';
       this.enableDisableTiles(!opp.isStarter);
     });
 
@@ -114,8 +125,8 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
         this.tiles[i][j].mark = null;
       }
     }
-    this.mark = null;
     this.result = null;
+    this.opponent = null;
   }
 
   private setTile(move: Move): void {
