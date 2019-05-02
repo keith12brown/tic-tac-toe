@@ -17,21 +17,23 @@
     <mat-icon color="primary" svgIcon={{opponentMark}}></mat-icon>
   </div>
 </div>
-<div class=grid-container>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="0"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="1"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="2"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="0"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="1"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="2"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="0"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="1"></app-tic-tac-toe-tile>
-  <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="2"></app-tic-tac-toe-tile>
-</div>
-<div class="winner" *ngIf="result">
-  <b>{{result.message}}</b> <br>
-  <span>{{result.mark}}</span>
-</div>
-<div class="messages" *ngIf="messages">
-  <pre>{{messages}}</pre>
+<div>
+  <div class=grid-container>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="0"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="1"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="2"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="0"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="1"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="2"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="0"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="1"></app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="2"></app-tic-tac-toe-tile>
+  <div class="winner" *ngIf="result">
+    <b>{{result.message}}</b> <br>
+    <span>{{result.mark}}</span>
+  </div>
+  <div class="messages" *ngIf="messages">
+    <pre>{{messages}}</pre>
+  </div>
+  </div>
 </div>

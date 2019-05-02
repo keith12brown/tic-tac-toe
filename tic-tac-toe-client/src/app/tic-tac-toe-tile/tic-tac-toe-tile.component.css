@@ -1,8 +1,14 @@
 .grid-cell {
+  display: auto;
+  grid-column: auto;
+  grid-row: auto;
   background-color: rgba(255, 255, 255, 0.8);
   border: 1px solid black;
-  font-size: 4rem;
-  width: 5rem;
-  height: 5rem;
+  font-size: 4.5em;
+  height: 100px;
+  margin: auto;
+  align-items: center;
+  vertical-align: middle;
   text-align: center;
+  background-color: bisque;
 }
