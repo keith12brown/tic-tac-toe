@@ -10,6 +10,9 @@
   <ng-template #notConnected>
     <mat-icon color="warn" svgIcon="cloud-off"></mat-icon>
   </ng-template>
+  <div *ngIf="connected && !mark">
+    <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
+  </div>
   <div *ngIf="mark">
     <label class="player-label">you</label>
     <mat-icon color="primary" svgIcon={{mark}}></mat-icon>
@@ -28,12 +31,9 @@
     <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="0"></app-tic-tac-toe-tile>
     <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="1"></app-tic-tac-toe-tile>
     <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="2"></app-tic-tac-toe-tile>
-  <div class="winner" *ngIf="result">
-    <b>{{result.message}}</b> <br>
-    <span>{{result.mark}}</span>
-  </div>
-  <div class="messages" *ngIf="messages">
-    <pre>{{messages}}</pre>
-  </div>
+    <div class="winner" *ngIf="result">
+      <b>{{result.message}}</b> <br>
+      <span>{{result.mark}}</span>
+    </div>
   </div>
 </div>

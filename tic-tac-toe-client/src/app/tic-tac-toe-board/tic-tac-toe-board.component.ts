@@ -19,8 +19,6 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
     mark: string
   } = null;
 
-  messages = '';
-
   opponent: Opponent;
 
   public get mark(): string {
@@ -54,6 +52,9 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
     iconRegistry.addSvgIcon(
       'o',
       sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/o.svg'));
+    iconRegistry.addSvgIcon(
+      'hourglass-full',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-hourglass_full-24px.svg'));
   }
 
   ngAfterViewInit(): void {
@@ -71,7 +72,7 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
       this.enableDisableTiles(!opp.isStarter);
     });
 
-    this.socket.message$.subscribe((message) => this.buildMesssage(message));
+    this.socket.message$.subscribe((message) => console.log(message));
 
     this.socket.connected$.subscribe((value) => {
       this.connected = value;
@@ -144,19 +145,6 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
         tile.enabled = value;
       }
     });
-  }
-
-  private buildMesssage(message: string): void {
-    if (this.messages === null) {
-      this.messages = '';
-    } else {
-      const split = this.messages.split('\n');
-      if (split.length > 10) {
-        split.splice(0, 1);
-        this.messages = split.join('\n');
-      }
-    }
-    this.messages += `${message}\n`;
   }
 
   private detectWinner(): void {
