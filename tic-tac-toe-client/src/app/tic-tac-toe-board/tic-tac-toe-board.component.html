@@ -8,7 +8,12 @@
     <mat-icon color="primary" svgIcon="cloud"></mat-icon>
   </div>
   <ng-template #notConnected>
-    <mat-icon color="warn" svgIcon="cloud-off"></mat-icon>
+    <div *ngIf="!error; else haveError">
+      <mat-icon color="disabled" svgIcon="cloud-off"></mat-icon>
+    </div>
+    <ng-template #haveError>
+      <mat-icon color="warn" svgIcon="cloud-off"></mat-icon>
+    </ng-template>
   </ng-template>
   <div *ngIf="connected && !mark">
     <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
@@ -22,8 +27,8 @@
 </div>
 <div>
   <div class=grid-container *ngIf="tileArray.length > 0">
-    <app-tic-tac-toe-tile *ngFor="let tile of tileArray;"
-      (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>{{mark}}</app-tic-tac-toe-tile>
+    <app-tic-tac-toe-tile *ngFor="let tile of tileArray;" (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>
+      {{mark}}</app-tic-tac-toe-tile>
     <div class="winner" *ngIf="result">
       {{result.mark}}
     </div>

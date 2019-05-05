@@ -19,6 +19,8 @@ export class WebSocketService {
 
   message$: Subject<string> = new Subject<string>();
 
+  error$: Subject<string> = new Subject<string>();
+
   connected$: Subject<boolean> = new Subject<boolean>();
 
   opponentConnected$: Subject<Opponent> = new Subject<Opponent>();
@@ -31,9 +33,13 @@ export class WebSocketService {
   connect() {
     this.socket$ = new WebSocketSubject<Message>(this.config.getSocketUrl());
     this.socket$.subscribe(
-      (message) => this.processMessage(message),
+      (message) => {
+        this.processMessage(message);
+        this.error$.next('');
+      },
       (error: Event) => {
         this.message$.next(`Failed to connect to server. ${(<WebSocket>error.target)}`);
+        this.error$.next('Failed to connect');
       } ,
       () => console.log('done')
     );

@@ -44,6 +44,8 @@ export class TicTacToeBoardComponent implements OnInit {
 
   connected = false;
 
+  error = false;
+
   private replay = false;
 
   private enabled = false;
@@ -97,13 +99,16 @@ export class TicTacToeBoardComponent implements OnInit {
       this.enabled = !opp.isStarter;
     });
 
+    this.socket.error$.subscribe(error => error ? this.error = true : false);
+
     this.socket.message$.subscribe(message => console.log(message));
 
     this.socket.connected$.subscribe(value => {
       this.connected = value;
       this.socket.registerPlayer(this.player);
       this.replay = false;
-    });
+    }
+    );
 
     this.socket.opponentMove$.subscribe(oppMove => {
       this.setTile(oppMove);
