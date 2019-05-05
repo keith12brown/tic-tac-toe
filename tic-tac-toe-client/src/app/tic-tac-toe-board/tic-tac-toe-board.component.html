@@ -21,19 +21,11 @@
   </div>
 </div>
 <div>
-  <div class=grid-container>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="0"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="1"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="0" [column]="2"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="0"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="1"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="1" [column]="2"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="0"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="1"></app-tic-tac-toe-tile>
-    <app-tic-tac-toe-tile (clicked)="tileClick($event)" [row]="2" [column]="2"></app-tic-tac-toe-tile>
+  <div class=grid-container *ngIf="tileArray.length > 0">
+    <app-tic-tac-toe-tile *ngFor="let tile of tileArray;"
+      (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>{{mark}}</app-tic-tac-toe-tile>
     <div class="winner" *ngIf="result">
-      <b>{{result.message}}</b> <br>
-      <span>{{result.mark}}</span>
+      {{result.mark}}
     </div>
   </div>
 </div>

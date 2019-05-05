@@ -1,7 +1,10 @@
-import { Component, OnInit, ElementRef, HostListener, Input, AfterViewInit, EventEmitter, Output, OnChanges } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { Move } from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
-import { NumberFormatStyle } from '@angular/common';
-import { __importDefault } from 'tslib';
+
+export class Tile {
+  constructor(public row: number, public col: number, public mark?: string) {
+  }
+}
 
 @Component({
   selector: 'app-tic-tac-toe-tile',
@@ -10,18 +13,17 @@ import { __importDefault } from 'tslib';
 })
 export class TicTacToeTileComponent {
 
-  enabled = false;
-  mark = '';
-  @Input() row = 0;
-  @Input() column = 0;
-  @Output() clicked: EventEmitter<{row: number, column: number}> = new EventEmitter();
+  @Input() tile: Tile;
 
-  constructor() { }
+  @Input() mark = '';
+
+  @Output() clicked: EventEmitter<{ row: number, column: number }> = new EventEmitter();
+
+  constructor() {
+  }
 
   onClick() {
-    if (this.enabled) {
-      const info: Move = { row: this.row, column: this.column};
-      this.clicked.emit(info);
-    }
+    const info: Move = { row: this.tile.row, column: this.tile.col };
+    this.clicked.emit(info);
   }
 }

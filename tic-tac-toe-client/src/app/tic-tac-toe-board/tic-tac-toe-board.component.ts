@@ -1,10 +1,18 @@
-import { Component, OnInit, ViewChildren, QueryList, AfterViewInit, OnChanges, SimpleChanges, Input } from '@angular/core';
-import { Subject } from 'rxjs';
+import {
+  Component,
+  OnInit,
+  Input
+} from '@angular/core';
 import { WebSocketService } from '../websocket.service';
-import { Opponent, Move, TicTacToeMessage } from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
-import { TicTacToeTileComponent } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatButton, MatButtonModule, MatFormFieldModule, MatIconRegistry, MatIconModule } from '@angular/material';
+import {
+  Opponent,
+  Move,
+  TicTacToeMessage
+} from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
+import { TicTacToeTileComponent, Tile } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
+import {
+  MatIconRegistry
+} from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -12,14 +20,17 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './tic-tac-toe-board.component.html',
   styleUrls: ['./tic-tac-toe-board.component.css']
 })
-export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
-
+export class TicTacToeBoardComponent implements OnInit {
   result: {
-    message: string,
-    mark: string
+    message: string;
+    mark: string;
   } = null;
 
   opponent: Opponent;
+
+  private tiles: Tile[][] = new Array();
+
+  tileArray: Tile[] = new Array<Tile>();
 
   public get mark(): string {
     return this.opponent ? (this.opponent.isStarter ? 'o' : 'x') : '';
@@ -29,61 +40,75 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
     return this.opponent.isStarter ? 'x' : 'o';
   }
 
-  tiles: TicTacToeTileComponent[][] = [];
-
-  @ViewChildren(TicTacToeTileComponent) ticTacToeTileComponents: QueryList<TicTacToeTileComponent>;
-
   @Input() player = '';
 
   connected = false;
 
   private replay = false;
 
-  constructor(private socket: WebSocketService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+  private enabled = false;
+
+  constructor(
+    private socket: WebSocketService,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer
+  ) {
     iconRegistry.addSvgIcon(
       'cloud',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-cloud-24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl(
+        'assets/graphics/baseline-cloud-24px.svg'
+      )
+    );
     iconRegistry.addSvgIcon(
       'cloud-off',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-cloud_off-24px.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl(
+        'assets/graphics/baseline-cloud_off-24px.svg'
+      )
+    );
     iconRegistry.addSvgIcon(
       'x',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/x.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/x.svg')
+    );
     iconRegistry.addSvgIcon(
       'o',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/o.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/o.svg')
+    );
     iconRegistry.addSvgIcon(
       'hourglass-full',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/baseline-hourglass_full-24px.svg'));
-  }
+      sanitizer.bypassSecurityTrustResourceUrl(
+        'assets/graphics/baseline-hourglass_full-24px.svg'
+      )
+    );
 
-  ngAfterViewInit(): void {
-    this.ticTacToeTileComponents.forEach((tile) => {
-      if (!this.tiles[tile.row]) {
-        this.tiles[tile.row] = [];
+    let index = 0;
+    for (let row = 0; row < 3; ++row) {
+      this.tiles[row] = [];
+      for (let col = 0; col < 3; ++col) {
+        const t = new Tile(row, col);
+        this.tiles[row][col] = t;
+        this.tileArray[index++] = t;
       }
-      this.tiles[tile.row][tile.column] = tile;
-    });
+    }
   }
 
   ngOnInit() {
-    this.socket.opponentConnected$.subscribe((opp) => {
+    this.socket.opponentConnected$.subscribe(opp => {
       this.opponent = opp;
-      this.enableDisableTiles(!opp.isStarter);
+      this.enabled = !opp.isStarter;
     });
 
-    this.socket.message$.subscribe((message) => console.log(message));
+    this.socket.message$.subscribe(message => console.log(message));
 
-    this.socket.connected$.subscribe((value) => {
+    this.socket.connected$.subscribe(value => {
       this.connected = value;
       this.socket.registerPlayer(this.player);
       this.replay = false;
     });
 
-    this.socket.opponentMove$.subscribe((oppMove) => {
+    this.socket.opponentMove$.subscribe(oppMove => {
       this.setTile(oppMove);
-      this.enableDisableTiles(true);
       this.detectWinner();
+      this.enabled = !this.replay;
     });
   }
 
@@ -101,50 +126,35 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
     this.clearBoard();
   }
 
-  onKeyUp(event) {
+  onKeyUp(event: KeyboardEvent) {
     const target = <HTMLInputElement>event.target;
     this.player = target.value;
   }
 
   tileClick(move: Move) {
-    const tiles = this.ticTacToeTileComponents.filter((tile) => tile.column === move.column && tile.row === move.row);
-    if (tiles && tiles.length > 0) {
-      move.mark = this.mark;
+    if (this.enabled) {
+      const tile = this.tiles[move.row][move.column];
+      tile.mark = move.mark = this.mark;
       const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
       this.socket.send(message);
-      const tile = tiles[0];
-      this.enableDisableTiles(false);
       tile.mark = this.mark;
       this.detectWinner();
+      this.enabled = false;
     }
   }
 
   private clearBoard(): void {
-    this.ticTacToeTileComponents.forEach((tile) => tile.mark = null);
-    for (let i = 0; i < 3; ++i) {
-      for (let j = 0; j < 3; ++j) {
-        this.tiles[i][j].mark = null;
-      }
-    }
+    this.tileArray.forEach((tile) => tile.mark = null);
     this.result = null;
     this.opponent = null;
+    this.enabled = false;
   }
 
   private setTile(move: Move): void {
-    const tile = this.ticTacToeTileComponents.find((tileToMark) => tileToMark.row === move.row && tileToMark.column === move.column);
+    const tile = this.tiles[move.row][move.column];
     if (tile) {
       tile.mark = move.mark;
     }
-  }
-
-  private enableDisableTiles(value: boolean = true) {
-    this.ticTacToeTileComponents.forEach((tile) => {
-      if (!tile.mark) {
-        tile.enabled = value;
-      } else if (!value) {
-        tile.enabled = value;
-      }
-    });
   }
 
   private detectWinner(): void {
@@ -184,19 +194,20 @@ export class TicTacToeBoardComponent implements OnInit, AfterViewInit {
 
     if (!this.result) {
       let count = 0;
-      this.tiles.forEach((row) => row.forEach((col) => col.mark ? ++count : count += 0));
+      this.tiles.forEach(row =>
+        row.forEach(col => (col.mark ? ++count : (count += 0)))
+      );
       if (count === 9) {
         this.result = { message: 'Tie', mark: 'X/O' };
       }
     }
 
     if (this.result) {
-      this.enableDisableTiles(false);
       this.replay = true;
     }
   }
 
-  evalAdjacentCells(tiles: TicTacToeTileComponent[]): string {
+  evalAdjacentCells(tiles: Tile[]): string {
     const marker = tiles[0] && tiles[0].mark ? tiles[0].mark : null;
     if (marker) {
       for (let i = 1; i < tiles.length; ++i) {
