@@ -8,22 +8,17 @@
     <mat-icon color="primary" svgIcon="cloud"></mat-icon>
   </div>
   <ng-template #notConnected>
-    <div *ngIf="!error; else haveError">
-      <mat-icon color="disabled" svgIcon="cloud-off"></mat-icon>
-    </div>
-    <ng-template #haveError>
-      <mat-icon color="warn" svgIcon="cloud-off"></mat-icon>
-    </ng-template>
-  </ng-template>
-  <div *ngIf="connected && !mark">
-    <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
-  </div>
-  <div *ngIf="mark">
-    <label class="player-label">you</label>
-    <mat-icon color="primary" svgIcon={{mark}}></mat-icon>
-    <label class="player-label">{{opponent.opponent}}</label>
-    <mat-icon color="primary" svgIcon={{opponentMark}}></mat-icon>
-  </div>
+    <mat-icon color={{connectionColor}} svgIcon="cloud-off"></mat-icon>
+</ng-template>
+<div *ngIf="connected && !mark">
+  <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
+</div>
+<div *ngIf="mark">
+  <label class="player-label">you</label>
+  <mat-icon [ngClass]="thisPlayerGoStop" svgIcon={{mark}}></mat-icon>
+  <label class="player-label">{{opponent.opponent}}</label>
+  <mat-icon [ngClass]="oppPlayerGoStop" svgIcon={{opponentMark}}></mat-icon>
+</div>
 </div>
 <div>
   <div class=grid-container *ngIf="tileArray.length > 0">

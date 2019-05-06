@@ -35,6 +35,14 @@
   vertical-align: 30%;
 }
 
+.player-stop {
+  color: red;
+}
+
+.player-go {
+  color: green;
+}
+
 .mat-form-field {
   margin-bottom: -15px;
   margin-top: -15px;

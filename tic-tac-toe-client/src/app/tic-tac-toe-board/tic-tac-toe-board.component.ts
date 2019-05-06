@@ -40,7 +40,27 @@ export class TicTacToeBoardComponent implements OnInit {
     return this.opponent.isStarter ? 'x' : 'o';
   }
 
+  public get thisPlayerGoStop(): string {
+    return !this.canPlay() ? (this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
+  }
+
+  public get oppPlayerGoStop(): string {
+    return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
+  }
+
   @Input() player = '';
+
+  private _connectionColor: string;
+  public get connectionColor(): string {
+    if (!this.connected && this.error) {
+      this._connectionColor = 'warn';
+    } else if (!this.connected) {
+      this._connectionColor = 'disabled';
+    } else if (this.connected) {
+      this._connectionColor = 'primary';
+    }
+    return this._connectionColor;
+  }
 
   connected = false;
 
@@ -137,8 +157,8 @@ export class TicTacToeBoardComponent implements OnInit {
   }
 
   tileClick(move: Move) {
-    if (this.enabled) {
-      const tile = this.tiles[move.row][move.column];
+    const tile = this.tiles[move.row][move.column];
+    if (this.enabled && !tile.mark) {
       tile.mark = move.mark = this.mark;
       const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
       this.socket.send(message);
