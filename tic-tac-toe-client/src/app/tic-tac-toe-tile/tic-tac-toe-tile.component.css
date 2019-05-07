@@ -1,7 +1,8 @@
 .grid-cell {
   display: auto;
   background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid black;
+  border:  1px solid black;
+  border-right: none;
   font-size: 4.5em;
   height: 100px;
   margin: auto;
@@ -9,4 +10,8 @@
   vertical-align: middle;
   text-align: center;
   background-color: bisque;
+}
+
+.grid-cell-right {
+  border-right:  1px solid black;
 }
