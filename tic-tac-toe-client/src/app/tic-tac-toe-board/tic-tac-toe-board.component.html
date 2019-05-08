@@ -9,23 +9,21 @@
   </div>
   <ng-template #notConnected>
     <mat-icon color={{connectionColor}} svgIcon="cloud-off"></mat-icon>
-</ng-template>
-<div *ngIf="connected && !mark">
-  <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
+  </ng-template>
+  <div *ngIf="connected && !mark">
+    <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
+  </div>
+  <div *ngIf="mark">
+    <label class="player-label">you</label>
+    <mat-icon [ngClass]="thisPlayerGoStop" svgIcon={{mark}}></mat-icon>
+    <label class="player-label">{{opponent.opponent}}</label>
+    <mat-icon [ngClass]="oppPlayerGoStop" svgIcon={{opponentMark}}></mat-icon>
+  </div>
 </div>
-<div *ngIf="mark">
-  <label class="player-label">you</label>
-  <mat-icon [ngClass]="thisPlayerGoStop" svgIcon={{mark}}></mat-icon>
-  <label class="player-label">{{opponent.opponent}}</label>
-  <mat-icon [ngClass]="oppPlayerGoStop" svgIcon={{opponentMark}}></mat-icon>
-</div>
-</div>
-<div>
-  <div class=grid-container *ngIf="tileArray.length > 0">
-    <app-tic-tac-toe-tile *ngFor="let tile of tileArray;" (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>
-      {{mark}}</app-tic-tac-toe-tile>
-    <div class="winner" *ngIf="result">
-      {{result.mark}}
-    </div>
+<div class=grid-container *ngIf="tileArray.length > 0">
+  <app-tic-tac-toe-tile *ngFor="let tile of tileArray;" (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>
+    {{mark}}</app-tic-tac-toe-tile>
+  <div class="winner" *ngIf="result">
+    {{result.mark}}
   </div>
 </div>
