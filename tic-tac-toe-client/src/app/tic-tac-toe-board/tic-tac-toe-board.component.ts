@@ -21,10 +21,6 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./tic-tac-toe-board.component.css']
 })
 export class TicTacToeBoardComponent implements OnInit {
-  result: {
-    message: string;
-    mark: string;
-  } = null;
 
   opponent: Opponent;
 
@@ -68,7 +64,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
   private replay = false;
 
-  private enabled = false;
+  enabled = false;
 
   constructor(
     private socket: WebSocketService,
@@ -169,8 +165,7 @@ export class TicTacToeBoardComponent implements OnInit {
   }
 
   private clearBoard(): void {
-    this.tileArray.forEach((tile) => tile.mark = null);
-    this.result = null;
+    this.tileArray.forEach((tile) => tile.clear());
     this.opponent = null;
     this.enabled = false;
   }
@@ -183,7 +178,7 @@ export class TicTacToeBoardComponent implements OnInit {
   }
 
   private detectWinner(): void {
-    let result: string = null;
+    let result: {mark: string, tiles: Tile[]} = null;
 
     for (let row = 0; result == null && row < 3; ++row) {
       result = this.evalAdjacentCells(this.tiles[row]);
@@ -214,33 +209,23 @@ export class TicTacToeBoardComponent implements OnInit {
     }
 
     if (result) {
-      this.result = { message: 'The Winner', mark: result };
+      result.tiles.forEach(tile => tile.isWinner$.next(true));
     }
 
-    if (!this.result) {
-      let count = 0;
-      this.tiles.forEach(row =>
-        row.forEach(col => (col.mark ? ++count : (count += 0)))
-      );
-      if (count === 9) {
-        this.result = { message: 'Tie', mark: 'X/O' };
-      }
-    }
-
-    if (this.result) {
+    if (result || this.tileArray.every( t => t.mark ? true : false)) {
       this.replay = true;
     }
   }
 
-  evalAdjacentCells(tiles: Tile[]): string {
-    const marker = tiles[0] && tiles[0].mark ? tiles[0].mark : null;
-    if (marker) {
+  evalAdjacentCells(tiles: Tile[]): { mark: string, tiles: Tile[]} {
+    const mark = tiles[0] && tiles[0].mark ? tiles[0].mark : null;
+    if (mark) {
       for (let i = 1; i < tiles.length; ++i) {
-        if (!tiles[i].mark || tiles[i].mark !== marker) {
+        if (!tiles[i].mark || tiles[i].mark !== mark) {
           return null;
         }
       }
     }
-    return marker;
+    return mark ? {mark, tiles} : null;
   }
 }

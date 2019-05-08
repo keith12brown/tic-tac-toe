@@ -4,6 +4,7 @@
 <div class="icon-container">
   <button class="mat-flat-button" mat-flat-button color="primary" (click)="clickConnect()"
     [disabled]="!canPlay()">Play</button>
+  <mat-icon *ngIf="mark" [ngClass]="enabled ? 'player-go' : 'player-stop'" svgIcon="o"></mat-icon>
   <div *ngIf="connected; else notConnected">
     <mat-icon color="primary" svgIcon="cloud"></mat-icon>
   </div>
@@ -15,15 +16,13 @@
   </div>
   <div *ngIf="mark">
     <label class="player-label">you</label>
-    <mat-icon [ngClass]="thisPlayerGoStop" svgIcon={{mark}}></mat-icon>
+    <mat-icon svgIcon={{mark}}></mat-icon>
     <label class="player-label">{{opponent.opponent}}</label>
-    <mat-icon [ngClass]="oppPlayerGoStop" svgIcon={{opponentMark}}></mat-icon>
+    <mat-icon svgIcon={{opponentMark}}></mat-icon>
   </div>
 </div>
 <div class=grid-container *ngIf="tileArray.length > 0">
   <app-tic-tac-toe-tile *ngFor="let tile of tileArray;" (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>
-    {{mark}}</app-tic-tac-toe-tile>
-  <div class="winner" *ngIf="result">
-    {{result.mark}}
-  </div>
+    {{mark}}
+  </app-tic-tac-toe-tile>
 </div>

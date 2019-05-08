@@ -8,15 +8,6 @@
   width: 200px;
 }
 
-.winner {
-  grid-column: 1 / span 3;
-  background-color: green;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 4.5em;
-  padding: 0;
-}
-
 .icon-container {
   display: flex;
   margin-top: 0;
@@ -26,21 +17,27 @@
   align-items: center;
 }
 
+.icon-container > mat-icon {
+  margin-right: 4px;
+}
+
 .player-label {
   display: inline-flexbox;
   height: 25px;
   padding: 0.5em;
   margin-bottom: 10%;
-  font-size: large;
-  vertical-align: 30%;
+  font-size: 1em;
+  vertical-align: 25%;
 }
 
 .player-stop {
   color: red;
+  background-color: red;
 }
 
 .player-go {
   color: green;
+  background-color: green;
 }
 
 .mat-form-field {
