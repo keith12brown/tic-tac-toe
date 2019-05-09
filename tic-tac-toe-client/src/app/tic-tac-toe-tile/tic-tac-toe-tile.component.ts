@@ -26,7 +26,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
 
   @Input() mark = '';
 
-  @Output() clicked: EventEmitter<{ row: number, column: number }> = new EventEmitter();
+  @Output() clicked: EventEmitter<{ row: number, col: number }> = new EventEmitter();
 
   isInWinner = false;
 
@@ -34,7 +34,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
   }
 
   onClick() {
-    const info: Move = { row: this.tile.row, column: this.tile.col };
+    const info: Move = { row: this.tile.row, col: this.tile.col };
     this.clicked.emit(info);
   }
 

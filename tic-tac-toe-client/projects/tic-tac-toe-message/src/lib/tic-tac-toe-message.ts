@@ -1,6 +1,6 @@
 export interface Move {
     row: number;
-    column: number;
+    col: number;
     mark?: string;
 }
 

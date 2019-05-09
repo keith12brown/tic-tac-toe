@@ -113,7 +113,7 @@ export class SocketWrapper {
     }
 
     private isMove(message: Move | Player | Opponent | ConnectionStatus | string): message is Player {
-        return (message as Move).column !== undefined;
+        return (message as Move).col !== undefined;
     }
 }
 

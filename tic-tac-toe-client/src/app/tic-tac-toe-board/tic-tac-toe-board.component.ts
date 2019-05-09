@@ -149,7 +149,7 @@ export class TicTacToeBoardComponent implements OnInit {
   }
 
   tileClick(move: Move) {
-    const tile = this.findTile(move.row, move.column);
+    const tile = this.findTile(move.row, move.col);
     if (this.enabled && !tile.mark) {
       tile.mark = move.mark = this.mark;
       const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
@@ -171,7 +171,7 @@ export class TicTacToeBoardComponent implements OnInit {
   }
 
   private setTile(move: Move): void {
-    const tile = this.findTile(move.row, move.column);
+    const tile = this.findTile(move.row, move.col);
     if (tile) {
       tile.mark = move.mark;
     }

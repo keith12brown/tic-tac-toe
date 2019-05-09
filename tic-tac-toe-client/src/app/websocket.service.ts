@@ -80,7 +80,7 @@ export class WebSocketService {
   }
 
   isMove(message: Move | Opponent | ConnectionStatus | Player | string): message is Move {
-    return (<Move>message).column !== undefined;
+    return (<Move>message).col !== undefined;
   }
 
   isConnectionStatus(message: Move | Opponent | ConnectionStatus | Player | string): message is ConnectionStatus {
