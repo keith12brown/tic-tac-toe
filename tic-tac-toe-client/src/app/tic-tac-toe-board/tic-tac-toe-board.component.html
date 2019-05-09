@@ -21,8 +21,8 @@
     <mat-icon svgIcon={{opponentMark}}></mat-icon>
   </div>
 </div>
-<div class=grid-container *ngIf="tileArray.length > 0">
-  <app-tic-tac-toe-tile *ngFor="let tile of tileArray;" (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>
+<div class=grid-container *ngIf="tiles.length > 0">
+  <app-tic-tac-toe-tile *ngFor="let tile of tiles;" (clicked)="tileClick($event)" [tile]=tile [mark]=tile.mark>
     {{mark}}
   </app-tic-tac-toe-tile>
 </div>

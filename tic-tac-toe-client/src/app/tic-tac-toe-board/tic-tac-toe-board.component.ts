@@ -24,9 +24,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
   opponent: Opponent;
 
-  private tiles: Tile[][] = new Array();
-
-  tileArray: Tile[] = new Array<Tile>();
+  tiles: Tile[] = new Array<Tile>();
 
   public get mark(): string {
     return this.opponent ? (this.opponent.isStarter ? 'o' : 'x') : '';
@@ -100,11 +98,9 @@ export class TicTacToeBoardComponent implements OnInit {
 
     let index = 0;
     for (let row = 0; row < 3; ++row) {
-      this.tiles[row] = [];
       for (let col = 0; col < 3; ++col) {
         const t = new Tile(row, col);
-        this.tiles[row][col] = t;
-        this.tileArray[index++] = t;
+        this.tiles[index++] = t;
       }
     }
   }
@@ -153,7 +149,7 @@ export class TicTacToeBoardComponent implements OnInit {
   }
 
   tileClick(move: Move) {
-    const tile = this.tiles[move.row][move.column];
+    const tile = this.findTile(move.row, move.column);
     if (this.enabled && !tile.mark) {
       tile.mark = move.mark = this.mark;
       const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
@@ -164,47 +160,57 @@ export class TicTacToeBoardComponent implements OnInit {
     }
   }
 
+  private findTile(row: number, col: number): Tile {
+    return this.tiles[row * 3 + col];
+  }
+
   private clearBoard(): void {
-    this.tileArray.forEach((tile) => tile.clear());
+    this.tiles.forEach((tile) => tile.clear());
     this.opponent = null;
     this.enabled = false;
   }
 
   private setTile(move: Move): void {
-    const tile = this.tiles[move.row][move.column];
+    const tile = this.findTile(move.row, move.column);
     if (tile) {
       tile.mark = move.mark;
     }
   }
 
   private detectWinner(): void {
-    let result: {mark: string, tiles: Tile[]} = null;
+    let result: { mark: string, tiles: Tile[] } = null;
 
-    for (let row = 0; result == null && row < 3; ++row) {
-      result = this.evalAdjacentCells(this.tiles[row]);
+    let markedTiles = 0;
+    this.tiles.map((t) => t.mark ? ++markedTiles : null);
+    if (markedTiles < 5) {
+      return;
+    }
+
+    for (let index = 0; result == null && index < 9; index += 3) {
+      result = this.evalAdjacentCells(this.tiles.slice(index, index + 3));
     }
 
     for (let col = 0; result == null && col < 3; ++col) {
       const tileVector = new Array();
       for (let row = 0; row < 3; ++row) {
-        tileVector.push(this.tiles[row][col]);
+        tileVector.push(this.findTile(row, col));
       }
       result = this.evalAdjacentCells(tileVector);
     }
 
     if (result == null) {
       const tileVector = new Array();
-      tileVector.push(this.tiles[0][0]);
-      tileVector.push(this.tiles[1][1]);
-      tileVector.push(this.tiles[2][2]);
+      tileVector.push(this.findTile(0, 0));
+      tileVector.push(this.findTile(1, 1));
+      tileVector.push(this.findTile(2, 2));
       result = this.evalAdjacentCells(tileVector);
     }
 
     if (result == null) {
       const tileVector = new Array();
-      tileVector.push(this.tiles[2][0]);
-      tileVector.push(this.tiles[1][1]);
-      tileVector.push(this.tiles[0][2]);
+      tileVector.push(this.findTile(2, 0));
+      tileVector.push(this.findTile(1, 1));
+      tileVector.push(this.findTile(0, 2));
       result = this.evalAdjacentCells(tileVector);
     }
 
@@ -212,12 +218,12 @@ export class TicTacToeBoardComponent implements OnInit {
       result.tiles.forEach(tile => tile.isWinner$.next(true));
     }
 
-    if (result || this.tileArray.every( t => t.mark ? true : false)) {
+    if (result || this.tiles.every(t => t.mark ? true : false)) {
       this.replay = true;
     }
   }
 
-  evalAdjacentCells(tiles: Tile[]): { mark: string, tiles: Tile[]} {
+  evalAdjacentCells(tiles: Tile[]): { mark: string, tiles: Tile[] } {
     const mark = tiles[0] && tiles[0].mark ? tiles[0].mark : null;
     if (mark) {
       for (let i = 1; i < tiles.length; ++i) {
@@ -226,6 +232,6 @@ export class TicTacToeBoardComponent implements OnInit {
         }
       }
     }
-    return mark ? {mark, tiles} : null;
+    return mark ? { mark, tiles } : null;
   }
 }
