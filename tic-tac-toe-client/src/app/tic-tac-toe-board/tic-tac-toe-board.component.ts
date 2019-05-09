@@ -9,7 +9,7 @@ import {
   Move,
   TicTacToeMessage
 } from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
-import { TicTacToeTileComponent, Tile } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
+import { TicTacToeTileComponent, Tile, Mark } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
 import {
   MatIconRegistry
 } from '@angular/material';
@@ -26,12 +26,12 @@ export class TicTacToeBoardComponent implements OnInit {
 
   tiles: Tile[] = new Array<Tile>();
 
-  public get mark(): string {
-    return this.opponent ? (this.opponent.isStarter ? 'o' : 'x') : '';
+  public get mark(): Mark {
+    return this.opponent ? (this.opponent.isStarter ? 'O' : 'X') : '';
   }
 
-  public get opponentMark(): string {
-    return this.opponent.isStarter ? 'x' : 'o';
+  public get opponentMark(): Mark {
+    return this.opponent.isStarter ? 'X' : 'O';
   }
 
   public get thisPlayerGoStop(): string {
@@ -82,11 +82,11 @@ export class TicTacToeBoardComponent implements OnInit {
       )
     );
     iconRegistry.addSvgIcon(
-      'x',
+      'X',
       sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/x.svg')
     );
     iconRegistry.addSvgIcon(
-      'o',
+      'O',
       sanitizer.bypassSecurityTrustResourceUrl('assets/graphics/o.svg')
     );
     iconRegistry.addSvgIcon(
@@ -155,10 +155,10 @@ export class TicTacToeBoardComponent implements OnInit {
   tileClick(move: Move) {
     const tile = this.findTile(move.row, move.col);
     if (this.enabled && !tile.mark) {
-      tile.mark = move.mark = this.mark;
+      tile.mark = this.mark;
+      move.mark = this.mark;
       const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
       this.socket.send(message);
-      tile.mark = this.mark;
       this.detectWinner();
       this.enabled = false;
     }
@@ -188,12 +188,12 @@ export class TicTacToeBoardComponent implements OnInit {
   private setTile(move: Move): void {
     const tile = this.findTile(move.row, move.col);
     if (tile) {
-      tile.mark = move.mark;
+      tile.mark = <Mark>move.mark;
     }
   }
 
   private detectWinner(): void {
-    let result: { mark: string, tiles: Tile[] } = null;
+    let result: { mark: Mark, tiles: Tile[] } = null;
 
     let markedTiles = 0;
     this.tiles.map((t) => t.mark ? ++markedTiles : null);
@@ -238,7 +238,7 @@ export class TicTacToeBoardComponent implements OnInit {
     }
   }
 
-  evalAdjacentCells(tiles: Tile[]): { mark: string, tiles: Tile[] } {
+  evalAdjacentCells(tiles: Tile[]): { mark: Mark, tiles: Tile[] } {
     const mark = tiles[0] && tiles[0].mark ? tiles[0].mark : null;
     if (mark) {
       for (let i = 1; i < tiles.length; ++i) {

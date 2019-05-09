@@ -6,7 +6,7 @@ export class Tile {
 
   isWinner$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public row: number, public col: number, public mark?: string) {
+  constructor(public row: number, public col: number, public mark?: Mark) {
   }
 
   clear(): void{
@@ -14,6 +14,8 @@ export class Tile {
     this.isWinner$.next(false);
   }
 }
+
+export type Mark = 'X' | 'O' | '?' | '';
 
 @Component({
   selector: 'app-tic-tac-toe-tile',
@@ -24,7 +26,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
 
   @Input() tile: Tile;
 
-  @Input() mark = '';
+  @Input() mark: Mark;
 
   @Output() clicked: EventEmitter<{ row: number, col: number }> = new EventEmitter();
 
