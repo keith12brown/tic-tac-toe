@@ -9,7 +9,7 @@ export class Tile {
   constructor(public row: number, public col: number, public mark?: Mark) {
   }
 
-  clear(): void{
+  clear(): void {
     this.mark = undefined;
     this.isWinner$.next(false);
   }
