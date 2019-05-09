@@ -14,11 +14,17 @@ export interface Player {
     opponent?: Opponent;
 }
 
+export interface OpponentQuit {
+    opponent: string;
+    code: number;
+    reason: string;
+}
+
 export interface ConnectionStatus {
     success: boolean;
     message?: string;
 }
 
 export class TicTacToeMessage {
-    constructor(public content: Move | Opponent| Player | ConnectionStatus | string, public sender: string) { }
+    constructor(public content: Move | Opponent| Player | ConnectionStatus | OpponentQuit | string, public sender: string) { }
 }

@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as http from 'http';
 import { AddressInfo } from 'ws';
 import * as WebSocket from 'ws';
-import { TicTacToeMessage as Message, Move, Opponent, Player, ConnectionStatus } from './tic-tac-toe-message';
+import { TicTacToeMessage as Message, Move, Opponent, Player, ConnectionStatus, OpponentQuit } from './tic-tac-toe-message';
 
 require('dotenv').config();
 
@@ -32,8 +32,19 @@ export class SocketWrapper {
     }
 
     private addHandlers(ws: WebSocket): void {
+        ws.on('close', (code: number, reason: string) => {
+            this.onClose(ws as ExtWebSocket, code, reason);
+        });
         ws.on('message', (msg: string) => this.onMessage(ws, msg));
         ws.on('pong', () => (ws as ExtWebSocket).isAlive = true);
+    }
+
+    private onClose(extWs: ExtWebSocket, code: number, reason: string): void {
+        console.log(`socket ${extWs.player.name} closed. Code ${code} Reason ${reason}`);
+        if (extWs.opponentSocket) {
+            extWs.opponentSocket.send(this.createMessage({ opponent: extWs.player.name, code, reason }));
+            (extWs.opponentSocket as ExtWebSocket).opponentSocket = undefined;
+        }
     }
 
     private onMessage(ws: WebSocket, msg: string): void {
@@ -51,7 +62,7 @@ export class SocketWrapper {
         ws.player = player;
         ws.opponentSocket = undefined;
         console.log(`player registering ${ws.player.name}`);
-        let sendMessage = this.createMessage('Waiting for an oppenent');
+        let sendMessage = this.createMessage('Waiting for an opponent');
         console.log(`current client ${ws.player.name}`);
         this.wss.clients
             .forEach(client => {
@@ -103,16 +114,17 @@ export class SocketWrapper {
         Opponent |
         Player |
         ConnectionStatus |
+        OpponentQuit |
         string,
         sender = 'NS'): string {
         return JSON.stringify(new Message(content, sender));
     }
 
-    private isPlayer(message: Move | Player | Opponent | ConnectionStatus | string): message is Player {
+    private isPlayer(message: Move | Player | Opponent | ConnectionStatus | OpponentQuit | string): message is Player {
         return (message as Player).name !== undefined;
     }
 
-    private isMove(message: Move | Player | Opponent | ConnectionStatus | string): message is Player {
+    private isMove(message: Move | Player | Opponent | ConnectionStatus | OpponentQuit | string): message is Player {
         return (message as Move).col !== undefined;
     }
 }

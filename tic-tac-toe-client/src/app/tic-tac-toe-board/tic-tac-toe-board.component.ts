@@ -127,6 +127,10 @@ export class TicTacToeBoardComponent implements OnInit {
       this.detectWinner();
       this.enabled = !this.replay;
     });
+
+    this.socket.opponentQuit$.subscribe(oppQuit => {
+      this.opponentQuit();
+    });
   }
 
   canPlay() {
@@ -158,6 +162,17 @@ export class TicTacToeBoardComponent implements OnInit {
       this.detectWinner();
       this.enabled = false;
     }
+  }
+
+  private opponentQuit(): void {
+    this.tiles.forEach(t => {
+      if (t.mark === this.opponentMark) {
+        t.mark = '?';
+      }
+      this.enabled = false;
+      this.replay = true;
+      this.opponent.opponent = 'Quit';
+    });
   }
 
   private findTile(row: number, col: number): Tile {

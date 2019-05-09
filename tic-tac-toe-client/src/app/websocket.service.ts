@@ -6,7 +6,8 @@ import {
   Move,
   Opponent,
   ConnectionStatus,
-  Player
+  Player,
+  OpponentQuit
 } from '../../projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
 
@@ -27,6 +28,8 @@ export class WebSocketService {
 
   opponentMove$: Subject<Move> = new Subject<Move>();
 
+  opponentQuit$: Subject<OpponentQuit> = new Subject<OpponentQuit>();
+
   constructor(private config: ConfigurationService) {
   }
 
@@ -40,7 +43,7 @@ export class WebSocketService {
       (error: Event) => {
         this.message$.next(`Failed to connect to server. ${(<WebSocket>error.target)}`);
         this.error$.next('Failed to connect');
-      } ,
+      },
       () => console.log('done')
     );
   }
@@ -59,6 +62,8 @@ export class WebSocketService {
         this.connected$.next(true);
       }
       this.message$.next(`${msg} ${(<ConnectionStatus>content).message}`);
+    } else if (this.isOpponentQuit(content)) {
+      this.opponentQuit$.next(content);
     } else if (this.isOpponent(content)) {
       this.opponentConnected$.next(content);
     } else if (this.isMove(content)) {
@@ -79,15 +84,19 @@ export class WebSocketService {
     this.socket$.next({ content: player, sender: name });
   }
 
-  isMove(message: Move | Opponent | ConnectionStatus | Player | string): message is Move {
+  isMove(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is Move {
     return (<Move>message).col !== undefined;
   }
 
-  isConnectionStatus(message: Move | Opponent | ConnectionStatus | Player | string): message is ConnectionStatus {
+  isConnectionStatus(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is ConnectionStatus {
     return (<ConnectionStatus>message).success !== undefined;
   }
 
-  isOpponent(message: Move | Opponent | ConnectionStatus | Player | string): message is Opponent {
+  isOpponent(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is Opponent {
     return (<Opponent>message).opponent !== undefined;
+  }
+
+  isOpponentQuit(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is OpponentQuit {
+    return (<OpponentQuit>message).code !== undefined;
   }
 }
