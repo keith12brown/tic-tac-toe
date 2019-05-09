@@ -150,6 +150,9 @@ export class TicTacToeBoardComponent implements OnInit {
   onKeyUp(event: KeyboardEvent) {
     const target = <HTMLInputElement>event.target;
     this.player = target.value;
+    if (event.key === 'Enter'  && this.canPlay()) {
+      this.clickConnect();
+    }
   }
 
   tileClick(move: Move) {
