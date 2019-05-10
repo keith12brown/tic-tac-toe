@@ -3,6 +3,7 @@
   background-color: rgba(255, 255, 255, 0.8);
   border:  1px solid black;
   border-right: none;
+  border-bottom: none;
   padding-top: 0;
   font-size: 90px;
   height: 100px;
@@ -19,4 +20,8 @@
 
 .grid-cell-right {
   border-right:  1px solid black;
+}
+
+.grid-cell-bottom {
+  border-bottom: 1px solid black;
 }
