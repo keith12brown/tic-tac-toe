@@ -25,10 +25,11 @@
 
 .icon-container > mat-icon {
   margin-right: 4px;
+  display: inline-block
 }
 
 .player-label {
-  display: inline-flexbox;
+  display: inline-box;
   padding: 0.5em;
   font-size: 1em;
   vertical-align: 40%;
