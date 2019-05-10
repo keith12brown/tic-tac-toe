@@ -10,10 +10,11 @@
 
 .icon-container {
   display: flex;
-  margin-top: 0;
+  margin: 5px;
+  margin-left: 0;
   flex-direction: row;
-  height: auto;
-  padding-bottom: 0.25rem;
+  height: 30px;
+  padding-bottom: 0.25em;
   align-items: center;
 }
 
