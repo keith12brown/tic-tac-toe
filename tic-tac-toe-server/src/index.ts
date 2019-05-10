@@ -41,7 +41,7 @@ export class SocketWrapper {
 
     private onClose(extWs: ExtWebSocket, code: number, reason: string): void {
         console.log(`socket ${extWs.player.name} closed. Code ${code} Reason ${reason}`);
-        if (extWs.opponentSocket) {
+        if (extWs.opponentSocket && extWs.opponentSocket.readyState === 1) {
             extWs.opponentSocket.send(this.createMessage({ opponent: extWs.player.name, code, reason }));
             (extWs.opponentSocket as ExtWebSocket).opponentSocket = undefined;
         }
