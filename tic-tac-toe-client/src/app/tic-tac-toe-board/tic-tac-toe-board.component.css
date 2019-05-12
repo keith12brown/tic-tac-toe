@@ -26,7 +26,8 @@ mat-form-field {
   width: 100%;
   height: 40px;
   align-items: center;
-  box-sizing: border-box;}
+  box-sizing: border-box;
+}
 
 .icon-container > mat-icon {
   display: inline-block;
