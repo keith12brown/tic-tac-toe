@@ -26,7 +26,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
 
   @Input() tile: Tile;
 
-  @Input() mark: Mark;
+  //@Input() mark: Mark;
 
   @Output() clicked: EventEmitter<{ row: number, col: number }> = new EventEmitter();
 
