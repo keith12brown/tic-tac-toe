@@ -14,12 +14,11 @@
     <div *ngIf="connected && !mark">
       <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
     </div>
-    <mat-icon *ngIf="mark" [ngClass]="enabled ? 'player-go' : 'player-stop'" svgIcon="hourglass-full"></mat-icon>
     <div *ngIf="mark">
       <label class="player-label">you</label>
-      <mat-icon svgIcon={{mark}}></mat-icon>
+      <mat-icon [ngClass]="enabled && !canPlay() ? 'player-go' : 'player-stop'"  svgIcon={{mark}}></mat-icon>
       <label class="player-label">{{opponent.opponent}}</label>
-      <mat-icon svgIcon={{opponentMark}}></mat-icon>
+      <mat-icon [ngClass]="enabled || canPlay() ? 'player-stop' : 'player-go'"  svgIcon={{opponentMark}}></mat-icon>
     </div>
   </div>
   <div class=grid-container *ngIf="tiles.length > 0">
