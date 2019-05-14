@@ -14,6 +14,12 @@
   background-color: bisque;
 }
 
+@media screen and (max-width: 900px) {
+  .grid-cell {
+    height: 100px;
+  }
+}
+
 .cell-in-winner {
   color: red;
 }
