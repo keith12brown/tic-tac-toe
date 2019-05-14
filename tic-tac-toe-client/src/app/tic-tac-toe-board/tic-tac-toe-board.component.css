@@ -1,7 +1,19 @@
 #container {
-  position: fixed;
-  margin: 0.5em;
-  width: 300px
+  position  : relative;
+  margin    : 0.5em;
+  width: 300px;
+  height: 300px;
+  align-self: center;
+}
+
+@media screen and (max-width: 900px) {
+  #container {
+    position: relative;
+    margin: 0.5em;
+    width: 382px;
+    height: 382px;
+    align-self: center;
+  }
 }
 
 mat-form-field {
@@ -12,7 +24,7 @@ mat-form-field {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 33.3%);
-  grid-template-rows: repeat(4, 33.3%);
+  grid-template-rows: repeat(3, 33.3%);
   background-color: transparent;
   grid-gap: 0px;
 }
@@ -29,25 +41,26 @@ mat-form-field {
   box-sizing: border-box;
 }
 
-.icon-container > mat-icon {
-  display: inline-block;
-  box-sizing: border-box;
+ mat-icon {
+  width: 30px;
+  height: 30px;
   margin: 0;
+  margin-right: 0.25em;
 }
 
 .player-label {
-  display: inline-box;
   font-size: 1em;
-  vertical-align: 40%;
-  margin: 0.25em;
+  vertical-align: 50%;
+  margin: 0;
+  margin-right: 0.25em;
 }
 
 .player-stop {
-  color: red;
+  fill: red;
 }
 
 .player-go {
-  color: green;
+  fill: green;
 }
 
 .mat-form-field {
