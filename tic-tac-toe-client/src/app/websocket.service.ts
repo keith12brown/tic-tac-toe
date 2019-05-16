@@ -8,7 +8,7 @@ import {
   ConnectionStatus,
   Player,
   OpponentQuit
-} from '../../projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
+} from '../../projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
 
 @Injectable({

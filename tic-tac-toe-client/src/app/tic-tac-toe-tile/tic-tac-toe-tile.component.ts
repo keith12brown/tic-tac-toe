@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { Move } from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
+import { Move } from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
 
 export class Tile {

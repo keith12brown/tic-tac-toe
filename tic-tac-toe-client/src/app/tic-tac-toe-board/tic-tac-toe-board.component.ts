@@ -8,7 +8,7 @@ import {
   Opponent,
   Move,
   TicTacToeMessage
-} from 'projects/tic-tac-toe-message/src/lib/tic-tac-toe-message';
+} from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { TicTacToeTileComponent, Tile, Mark } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
 import {
   MatIconRegistry
