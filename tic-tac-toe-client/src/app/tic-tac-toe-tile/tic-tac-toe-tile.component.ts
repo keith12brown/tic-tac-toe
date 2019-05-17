@@ -34,7 +34,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
   }
 
   onClick() {
-    const info: Move = { row: this.tile.row, col: this.tile.col };
+    const info: Move = { row: this.tile.row, col: this.tile.col, mark: '' };
     this.clicked.emit(info);
   }
 

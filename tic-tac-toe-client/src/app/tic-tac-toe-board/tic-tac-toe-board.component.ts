@@ -14,6 +14,7 @@ import {
   MatIconRegistry
 } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
+import { BoardEvaluateService } from '../board-evaluate.service';
 
 @Component({
   selector: 'app-tic-tac-toe-board',
@@ -65,6 +66,7 @@ export class TicTacToeBoardComponent implements OnInit {
   enabled = false;
 
   constructor(
+    private evaluationService: BoardEvaluateService,
     private socket: WebSocketService,
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer
@@ -124,7 +126,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
     this.socket.opponentMove$.subscribe(oppMove => {
       this.setTile(oppMove);
-      this.detectWinner();
+      this.detectWinner(oppMove);
       this.enabled = !this.replay;
     });
 
@@ -162,7 +164,7 @@ export class TicTacToeBoardComponent implements OnInit {
       move.mark = this.mark;
       const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
       this.socket.send(message);
-      this.detectWinner();
+      this.detectWinner(move);
       this.enabled = false;
     }
   }
@@ -195,61 +197,15 @@ export class TicTacToeBoardComponent implements OnInit {
     }
   }
 
-  private detectWinner(): void {
-    let result: { mark: Mark, tiles: Tile[] } = null;
-
-    let markedTiles = 0;
-    this.tiles.map((t) => t.mark ? ++markedTiles : null);
-    if (markedTiles < 5) {
-      return;
-    }
-
-    for (let index = 0; result == null && index < 9; index += 3) {
-      result = this.evalAdjacentCells(this.tiles.slice(index, index + 3));
-    }
-
-    for (let col = 0; result == null && col < 3; ++col) {
-      const tileVector = new Array();
-      for (let row = 0; row < 3; ++row) {
-        tileVector.push(this.findTile(row, col));
-      }
-      result = this.evalAdjacentCells(tileVector);
-    }
-
-    if (result == null) {
-      const tileVector = new Array();
-      tileVector.push(this.findTile(0, 0));
-      tileVector.push(this.findTile(1, 1));
-      tileVector.push(this.findTile(2, 2));
-      result = this.evalAdjacentCells(tileVector);
-    }
-
-    if (result == null) {
-      const tileVector = new Array();
-      tileVector.push(this.findTile(2, 0));
-      tileVector.push(this.findTile(1, 1));
-      tileVector.push(this.findTile(0, 2));
-      result = this.evalAdjacentCells(tileVector);
-    }
+  private detectWinner(move: Move): void {
+    const result = this.evaluationService.evaluate(move);
 
     if (result) {
-      result.tiles.forEach(tile => tile.isWinner$.next(true));
+      result.tiles.forEach(tile => this.tiles[tile.row * 3 + tile.col].isWinner$.next(true));
     }
 
     if (result || this.tiles.every(t => t.mark ? true : false)) {
       this.replay = true;
     }
-  }
-
-  evalAdjacentCells(tiles: Tile[]): { mark: Mark, tiles: Tile[] } {
-    const mark = tiles[0] && tiles[0].mark ? tiles[0].mark : null;
-    if (mark) {
-      for (let i = 1; i < tiles.length; ++i) {
-        if (!tiles[i].mark || tiles[i].mark !== mark) {
-          return null;
-        }
-      }
-    }
-    return mark ? { mark, tiles } : null;
   }
 }
