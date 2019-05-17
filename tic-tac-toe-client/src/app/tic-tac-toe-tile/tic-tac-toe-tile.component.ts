@@ -30,6 +30,10 @@ export class TicTacToeTileComponent implements AfterViewInit {
 
   isInWinner = false;
 
+  public get isOdd() {
+    return ((this.tile.row * 3 + this.tile.col) % 2) !== 0;
+  }
+
   constructor() {
   }
 

@@ -1,6 +1,6 @@
 .grid-cell {
   display: auto;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: cornflowerblue;
   border:  none;
   padding-top: 0;
   font-size: 90px;
@@ -9,7 +9,6 @@
   align-items: center;
   vertical-align: middle;
   text-align: center;
-  background-color: bisque;
 }
 
 @media screen and (max-width: 900px) {
@@ -18,6 +17,10 @@
   }
 }
 
-.cell-in-winner {
+.grid-cell.cell-odd {
+  background-color: yellow;
+}
+
+.grid-cell.cell-in-winner {
   color: red;
 }
