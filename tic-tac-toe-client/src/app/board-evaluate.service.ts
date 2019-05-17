@@ -30,7 +30,7 @@ export class BoardEvaluateService {
       return;
     }
 
-    for (let index = 0; result == null && index < 3; index += 3) {
+    for (let index = 0; result == null && index < 3; index++) {
       result = this.evalAdjacentCells(this.board[index]);
     }
 
