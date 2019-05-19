@@ -1,6 +1,5 @@
 .grid-cell {
   display: auto;
-  background-color: cornflowerblue;
   border:  none;
   padding-top: 0;
   font-size: 90px;
@@ -13,12 +12,8 @@
 
 @media screen and (max-width: 900px) {
   .grid-cell {
-    height: 100px;
+    height: 130px;
   }
-}
-
-.grid-cell.cell-odd {
-  background-color: yellow;
 }
 
 .grid-cell.cell-in-winner {

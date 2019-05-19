@@ -29,6 +29,14 @@ mat-form-field {
   grid-gap: 1px;
 }
 
+.grid-container app-tic-tac-toe-tile:nth-last-of-type(odd) {
+  background-color: cornflowerblue;
+}
+
+.grid-container app-tic-tac-toe-tile:nth-last-of-type(even) {
+  background-color: yellow;
+}
+
 .icon-container {
   display: flex;
   margin: 5px;
