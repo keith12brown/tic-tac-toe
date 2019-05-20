@@ -14,7 +14,7 @@
     <div *ngIf="connected && !mark">
       <mat-icon color="warn" svgIcon="hourglass-full"></mat-icon>
     </div>
-    <div *ngIf="mark">
+    <div class="players" *ngIf="mark">
       <label class="player-label">you</label>
       <mat-icon [ngClass]="enabled && !canPlay() ? 'player-go' : 'player-stop'"  svgIcon={{mark}}></mat-icon>
       <label class="player-label">{{opponent.opponent}}</label>
