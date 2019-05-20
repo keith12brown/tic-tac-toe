@@ -54,6 +54,13 @@ mat-form-field {
   height: 30px;
   margin: 0;
   margin-right: 0.25em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+}
+
+.players {
+  margin: 0;
+  margin-left: 0.25em;
 }
 
 .player-label {
