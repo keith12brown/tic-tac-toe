@@ -1,18 +1,22 @@
 .grid-cell {
   display: auto;
+  box-sizing: border-box; 
   border:  none;
   padding-top: 0;
-  font-size: 90px;
-  height: 100px;
+  padding-bottom: 30px;
+  font-size: 200px;
+  height: 200px;
   margin: auto;
-  align-items: center;
-  vertical-align: middle;
+  /* align-items: center; */
+  line-height: 100%;
   text-align: center;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 500px) {
   .grid-cell {
-    height: 130px;
+    font-size: 120px;
+    height: 120px;
+    line-height: 100%;
   }
 }
 
