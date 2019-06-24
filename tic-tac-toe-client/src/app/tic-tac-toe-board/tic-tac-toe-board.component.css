@@ -1,17 +1,25 @@
 #container {
-  position  : relative;
-  margin    : 0.5em;
+  position: absolute;
   width: 600px;
-  height: 800px;
+  height: 700px;
   align-self: center;
+  /* top: 10%; */
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 632px) {
   #container {
-    position: relative;
-    margin: 0.5em;
-    width: 382px;
-    height: 382px;
+    width: 90%;
+    height: 80%;
+    align-self: center;
+  }
+}
+
+@media screen and (max-height: 623px) and (orientation: landscape) {
+  #container {
+    width:  40%;
+    height: 100%; 
     align-self: center;
   }
 }
@@ -23,6 +31,8 @@ mat-form-field {
 
 .grid-container {
   display: grid;
+  width: 100%;
+  height: calc(100% - 100px);
   grid-template-columns: repeat(3, 33.3%);
   grid-template-rows: repeat(3, 33.3%);
   background-color: transparent;

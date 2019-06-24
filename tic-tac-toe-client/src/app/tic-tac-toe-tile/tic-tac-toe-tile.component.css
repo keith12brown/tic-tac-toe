@@ -12,11 +12,18 @@
   text-align: center;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 632px) {
   .grid-cell {
     font-size: 120px;
     height: 120px;
     line-height: 100%;
+  }
+}
+
+
+@media screen and (max-height: 632px) and (orientation: landscape) {
+  .grid-cell {
+    font-size: 85px;
   }
 }
 
