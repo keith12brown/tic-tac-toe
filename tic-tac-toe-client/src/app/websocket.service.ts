@@ -4,10 +4,8 @@ import { ConfigurationService } from './configuration.service';
 import {
   TicTacToeMessage as Message,
   Move,
-  Opponent,
   ConnectionStatus,
-  Player,
-  OpponentQuit
+  Player
 } from '../../projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
 
@@ -24,11 +22,11 @@ export class WebSocketService {
 
   connected$: Subject<boolean> = new Subject<boolean>();
 
-  opponentConnected$: Subject<Opponent> = new Subject<Opponent>();
+  opponentConnected$: Subject<Player> = new Subject<Player>();
 
   opponentMove$: Subject<Move> = new Subject<Move>();
 
-  opponentQuit$: Subject<OpponentQuit> = new Subject<OpponentQuit>();
+  opponentQuit$: Subject<Player> = new Subject<Player>();
 
   constructor(private config: ConfigurationService) {
   }
@@ -62,10 +60,13 @@ export class WebSocketService {
         this.connected$.next(true);
       }
       this.message$.next(`${msg} ${(<ConnectionStatus>content).message}`);
-    } else if (this.isOpponentQuit(content)) {
-      this.opponentQuit$.next(content);
-    } else if (this.isOpponent(content)) {
-      this.opponentConnected$.next(content);
+    } else if (this.isPlayer(content)) {
+      const opponent = content as Player;
+      if (!opponent.quit) {
+        this.opponentConnected$.next(content);
+      } else {
+        this.opponentQuit$.next(content);
+      }
     } else if (this.isMove(content)) {
       this.opponentMove$.next(content);
     } else if (typeof content === 'string') {
@@ -77,26 +78,22 @@ export class WebSocketService {
     let name = '';
     if (typeof player === 'string') {
       name = <string>player;
-      player = { name: name };
+      player = { name: name, isStarter: false, quit: false };
     } else {
       name = (<Player>player).name;
     }
     this.socket$.next({ content: player, sender: name });
   }
 
-  isMove(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is Move {
+  isMove(message: Move |  ConnectionStatus | Player | string): message is Move {
     return (<Move>message).col !== undefined;
   }
 
-  isConnectionStatus(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is ConnectionStatus {
+  isConnectionStatus(message: Move |  ConnectionStatus | Player | string): message is ConnectionStatus {
     return (<ConnectionStatus>message).success !== undefined;
   }
 
-  isOpponent(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is Opponent {
-    return (<Opponent>message).opponent !== undefined;
-  }
-
-  isOpponentQuit(message: Move | Opponent | ConnectionStatus | Player | OpponentQuit | string): message is OpponentQuit {
-    return (<OpponentQuit>message).code !== undefined;
+  isPlayer(message: Move | ConnectionStatus | Player | string): message is Player {
+    return (<Player>message).opponent !== undefined;
   }
 }

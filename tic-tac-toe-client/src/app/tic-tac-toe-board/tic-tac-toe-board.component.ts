@@ -5,16 +5,18 @@ import {
 } from '@angular/core';
 import { WebSocketService } from '../websocket.service';
 import {
-  Opponent,
   Move,
+  Player,
   TicTacToeMessage
 } from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { TicTacToeTileComponent, Tile, Mark } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
 import {
-  MatIconRegistry
+  MatIconRegistry,
+  MatTooltip,
 } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BoardEvaluateService } from '../board-evaluate.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-tic-tac-toe-board',
@@ -23,16 +25,19 @@ import { BoardEvaluateService } from '../board-evaluate.service';
 })
 export class TicTacToeBoardComponent implements OnInit {
 
-  opponent: Opponent;
+  player: Player;
 
-  tiles: Tile[] = new Array<Tile>();
+  private tiles: Tile[] = new Array<Tile>();
+
+  showDelay = new FormControl(500);
+  hideDelay = new FormControl(1000);
 
   public get mark(): Mark {
-    return this.opponent ? (this.opponent.isStarter ? 'O' : 'X') : '';
+    return this.player && this.player.opponent ? (this.player.isStarter ? 'X' : 'O') : '';
   }
 
   public get opponentMark(): Mark {
-    return this.opponent.isStarter ? 'X' : 'O';
+    return this.player && this.player.opponent ? (this.player.opponent.isStarter ? 'X' : 'O') : '';
   }
 
   public get thisPlayerGoStop(): string {
@@ -43,7 +48,7 @@ export class TicTacToeBoardComponent implements OnInit {
     return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
   }
 
-  @Input() player = '';
+  private playerName = '';
 
   private _connectionColor: string;
   public get connectionColor(): string {
@@ -57,13 +62,15 @@ export class TicTacToeBoardComponent implements OnInit {
     return this._connectionColor;
   }
 
-  connected = false;
+  private connected = false;
 
-  error = false;
+  private error = false;
 
   private replay = false;
 
-  enabled = false;
+  private enabled = false;
+
+  private winner: Player = undefined;
 
   constructor(
     private evaluationService: BoardEvaluateService,
@@ -109,7 +116,8 @@ export class TicTacToeBoardComponent implements OnInit {
 
   ngOnInit() {
     this.socket.opponentConnected$.subscribe(opp => {
-      this.opponent = opp;
+      this.player.opponent = opp;
+      this.player.isStarter = !opp.isStarter; // this.player's isStarter was set false on creation. The webservice is setting the opp's
       this.enabled = !opp.isStarter;
     });
 
@@ -119,6 +127,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
     this.socket.connected$.subscribe(value => {
       this.connected = value;
+      this.player = { isStarter: false, name: this.playerName, quit: false };
       this.socket.registerPlayer(this.player);
       this.replay = false;
     }
@@ -135,11 +144,25 @@ export class TicTacToeBoardComponent implements OnInit {
     });
   }
 
-  canPlay() {
-    return this.player && (!this.connected || this.replay);
+  playerTooltip(): string {
+    let result = '';
+    if (this.player) {
+      if (this.player.opponent.quit) {
+        result = `You win. ${this.player.opponent.name} quit`;
+      } else if (this.winner) {
+        result = this.winner === this.player ? 'You win' : `${this.player.opponent.name} wins`;
+      } else {
+        result = this.enabled ? 'Your turn' : `Waiting on ${this.player.opponent.name}`;
+      }
+    }
+    return result;
   }
 
-  clickConnect() {
+  canPlay() {
+    return this.playerName && (!this.connected || this.replay);
+  }
+
+  clickPlay() {
     if (!this.connected) {
       this.socket.connect();
     } else {
@@ -151,9 +174,9 @@ export class TicTacToeBoardComponent implements OnInit {
 
   onKeyUp(event: KeyboardEvent) {
     const target = <HTMLInputElement>event.target;
-    this.player = target.value;
-    if (event.key === 'Enter'  && this.canPlay()) {
-      this.clickConnect();
+    this.playerName = target.value;
+    if (event.key === 'Enter' && this.canPlay()) {
+      this.clickPlay();
     }
   }
 
@@ -162,7 +185,7 @@ export class TicTacToeBoardComponent implements OnInit {
     if (this.enabled && !tile.mark) {
       tile.mark = this.mark;
       move.mark = this.mark;
-      const message: TicTacToeMessage = new TicTacToeMessage(move, this.player);
+      const message: TicTacToeMessage = new TicTacToeMessage(move, this.playerName);
       this.socket.send(message);
       this.detectWinner(move);
       this.enabled = false;
@@ -174,9 +197,9 @@ export class TicTacToeBoardComponent implements OnInit {
       if (t.mark === this.opponentMark) {
         t.mark = '?';
       }
+      this.player.opponent.quit = true;
       this.enabled = false;
       this.replay = true;
-      this.opponent.opponent = 'Quit';
     });
   }
 
@@ -186,7 +209,10 @@ export class TicTacToeBoardComponent implements OnInit {
 
   private clearBoard(): void {
     this.tiles.forEach((tile) => tile.clear());
-    this.opponent = null;
+    this.winner = undefined;
+    if (this.player) {
+      this.player.opponent = undefined;
+    }
     this.enabled = false;
   }
 
@@ -201,6 +227,7 @@ export class TicTacToeBoardComponent implements OnInit {
     const result = this.evaluationService.evaluate(move);
 
     if (result) {
+      this.winner = result.mark === this.mark ? this.player : this.player.opponent;
       result.tiles.forEach(tile => this.tiles[tile.row * 3 + tile.col].isWinner$.next(true));
     }
 

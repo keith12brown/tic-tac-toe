@@ -4,20 +4,11 @@ export interface Move {
     mark: string;
 }
 
-export interface Opponent {
-    opponent: string;
-    isStarter: boolean;
-}
-
 export interface Player {
     name: string;
-    opponent?: Opponent;
-}
-
-export interface OpponentQuit {
-    opponent: string;
-    code: number;
-    reason: string;
+    opponent?: Player;
+    isStarter: boolean;
+    quit: boolean;
 }
 
 export interface ConnectionStatus {
@@ -26,5 +17,5 @@ export interface ConnectionStatus {
 }
 
 export class TicTacToeMessage {
-    constructor(public content: Move | Opponent| Player | ConnectionStatus | OpponentQuit | string, public sender: string) { }
+    constructor(public content: Move | Player | ConnectionStatus  | string, public sender: string) { }
 }
