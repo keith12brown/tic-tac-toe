@@ -96,3 +96,8 @@ mat-form-field {
 .mat-flat-button {
   margin-right: 0.5em;
 }
+
+.playerTooltip {
+  height: auto;
+  width: auto;
+}
