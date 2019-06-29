@@ -101,3 +101,11 @@ mat-form-field {
   height: auto;
   width: auto;
 }
+
+:hover.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+:hover.cursor-wait {
+  cursor: wait;
+}

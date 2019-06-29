@@ -30,3 +30,7 @@
 .grid-cell.cell-in-winner {
   color: red;
 }
+
+:hover.cursor-not-allowed {
+  cursor: not-allowed;
+}
