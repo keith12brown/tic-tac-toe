@@ -78,7 +78,7 @@ export class WebSocketService {
     let name = '';
     if (typeof player === 'string') {
       name = <string>player;
-      player = { name: name, isStarter: false, quit: false };
+      player = { name: name, mark: undefined, quit: false };
     } else {
       name = (<Player>player).name;
     }

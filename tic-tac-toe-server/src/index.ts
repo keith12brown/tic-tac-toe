@@ -74,10 +74,10 @@ export class SocketWrapper {
             .forEach(client => {
                 const extClient = client as ExtWebSocket;
                 console.log(`filtering clients ${extClient.player.name}`);
-                const playerStarts = Math.random() > 0.5 ? true : false;
+                const mark = Math.random() > 0.5 ? 'X' : 'O';
                 if (client !== ws && !extClient.player.opponent) {
-                    player.isStarter = playerStarts;
-                    extClient.player.isStarter = !playerStarts;
+                    player.mark = mark;
+                    extClient.player.mark = mark === 'X' ? 'O' : 'X';
                     extClient.player.opponent = player;
                     player.opponent = extClient.player;
                     extClient.opponentSocket = ws;
