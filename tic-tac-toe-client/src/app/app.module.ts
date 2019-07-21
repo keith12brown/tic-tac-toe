@@ -58,6 +58,7 @@ import { TicTacToeTileComponent } from './tic-tac-toe-tile/tic-tac-toe-tile.comp
     MatInputModule,
     MatIconModule,
     MatFormFieldModule,
+    MatTooltipModule
   ],
   exports: [
     BrowserAnimationsModule,

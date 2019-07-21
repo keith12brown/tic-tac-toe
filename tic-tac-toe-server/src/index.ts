@@ -6,7 +6,7 @@ import * as express from 'express';
 import * as http from 'http';
 import { AddressInfo } from 'ws';
 import * as WebSocket from 'ws';
-import { TicTacToeMessage as Message, Move, Opponent, Player, ConnectionStatus, OpponentQuit } from './tic-tac-toe-message';
+import { TicTacToeMessage as Message, Move, Player, ConnectionStatus } from './tic-tac-toe-message';
 
 require('dotenv').config();
 
@@ -43,7 +43,8 @@ export class SocketWrapper {
         console.log(`socket ${extWs.player.name} closed. Code ${code} Reason ${reason}`);
         try {
             if (extWs.opponentSocket && extWs.opponentSocket.readyState === 1) {
-                extWs.opponentSocket.send(this.createMessage({ opponent: extWs.player.name, code, reason }));
+                extWs.player.quit = true;
+                extWs.opponentSocket.send(this.createMessage(extWs.player));
                 (extWs.opponentSocket as ExtWebSocket).opponentSocket = undefined;
             }
         } catch (error) {
@@ -64,6 +65,7 @@ export class SocketWrapper {
 
     private registerPlayer(ws: ExtWebSocket, player: Player) {
         ws.player = player;
+        player.opponent = undefined;
         ws.opponentSocket = undefined;
         console.log(`player registering ${ws.player.name}`);
         let sendMessage = this.createMessage('Waiting for an opponent');
@@ -72,16 +74,18 @@ export class SocketWrapper {
             .forEach(client => {
                 const extClient = client as ExtWebSocket;
                 console.log(`filtering clients ${extClient.player.name}`);
-                const playerStarts = Math.random() > 0.5 ? true : false;
+                const mark = Math.random() > 0.5 ? 'X' : 'O';
                 if (client !== ws && !extClient.player.opponent) {
-                    extClient.player.opponent = { opponent: ws.player.name, isStarter: playerStarts };
+                    player.mark = mark;
+                    extClient.player.mark = mark === 'X' ? 'O' : 'X';
+                    extClient.player.opponent = player;
+                    player.opponent = extClient.player;
                     extClient.opponentSocket = ws;
                     ws.opponentSocket = extClient;
-                    ws.player.opponent = { opponent: extClient.player.name, isStarter: !playerStarts };
-                    const msg = this.createMessage(extClient.player.opponent as Opponent);
-                    console.log(`sending oppent message = ${msg}`);
+                    const msg = this.createMessage(extClient.player.opponent);
+                    console.log(`sending opponent message = ${msg}`);
                     extClient.send(msg);
-                    sendMessage = this.createMessage(ws.player.opponent as Opponent);
+                    sendMessage = this.createMessage(ws.player.opponent as Player);
                 }
             });
 
@@ -115,20 +119,28 @@ export class SocketWrapper {
 
     private createMessage(content:
         Move |
-        Opponent |
         Player |
         ConnectionStatus |
-        OpponentQuit |
         string,
         sender = 'NS'): string {
-        return JSON.stringify(new Message(content, sender));
+        const msg = new Message(content, sender);
+        const cache = new WeakSet();
+        return JSON.stringify(msg, (key, value) => {
+            if (typeof value === 'object' && value !== null) {
+                if (cache.has(value)) {
+                    return;
+                }
+                cache.add(value);
+            }
+            return value;
+        });
     }
 
-    private isPlayer(message: Move | Player | Opponent | ConnectionStatus | OpponentQuit | string): message is Player {
+    private isPlayer(message: Move | Player | ConnectionStatus | string): message is Player {
         return (message as Player).name !== undefined;
     }
 
-    private isMove(message: Move | Player | Opponent | ConnectionStatus | OpponentQuit | string): message is Player {
+    private isMove(message: Move | Player | ConnectionStatus | string): message is Player {
         return (message as Move).col !== undefined;
     }
 }
