@@ -293,5 +293,8 @@
       }
     }
   },
-  "defaultProject": "tic-tac-toe"
+  "defaultProject": "tic-tac-toe",
+  "cli": {
+    "analytics": "e3c3b7d4-13fd-468f-9070-72a5a2f315ee"
+  }
 }
