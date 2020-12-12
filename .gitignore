@@ -1,3 +1,7 @@
-tic-tac-toe-client/.vscode/launch.json
+**/node_modules/**
 
-node_modules
+**/.vscode/**
+
+**/dist/**
+
+.env
