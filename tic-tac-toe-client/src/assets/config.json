@@ -1,4 +1,4 @@
 {
-    "socketUrl": "ws://192.168.0.111:8999",
+    "socketUrl": "ws://192.168.0.118:8999",
     "singleClient": false
 }
