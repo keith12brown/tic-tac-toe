@@ -40,7 +40,7 @@ export class SocketWrapper {
     }
 
     private onClose(extWs: ExtWebSocket, code: number, reason: string): void {
-        console.log(`socket ${extWs.player.name} closed. Code ${code} Reason ${reason}`);
+        console.log(`socket ${extWs.player?.name} closed. Code ${code} Reason ${reason}`);
         try {
             if (extWs.opponentSocket && extWs.opponentSocket.readyState === 1) {
                 extWs.player.quit = true;
@@ -106,7 +106,7 @@ export class SocketWrapper {
             this.wss.clients.forEach((ws: WebSocket) => {
                 const extWs = ws as ExtWebSocket;
                 if (!extWs.isAlive) {
-                    console.log(`ping/pong terminating ${extWs.player.name}`);
+                    console.log(`ping/pong terminating ${extWs?.player?.name}`);
                     ws.terminate();
                 }
                 else {
