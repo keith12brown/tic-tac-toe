@@ -1,48 +1,39 @@
 <div id="container">
-  <mat-form-field class="mat-form-field" floatLabel="never">
-    <input required type="text" matInput placeholder="Name" (keyup)="onKeyUp($event)">
-  </mat-form-field>
-  <div class="icon-container">
-    <button mat-flat-button  class="mat-flat-button" color="primary" (click)="clickPlay()" 
-      matTooltip="Click to play" 
-      [matTooltipShowDelay]="showDelay.value"
-      [matTooltipHideDelay]="hideDelay.value"
-      [disabled]="!canPlay()">Play</button>
-    <div *ngIf="connected; else notConnected">
-      <mat-icon color="primary" svgIcon="cloud"  
-        matTooltip="Connected" 
-        [matTooltipShowDelay]="showDelay.value"
-        [matTooltipHideDelay]="hideDelay.value">
-      </mat-icon>
+    <mat-form-field class="mat-form-field" floatLabel="never">
+        <input required type="text" matInput placeholder="Name" (keyup)="onKeyUp($event)">
+    </mat-form-field>
+    <div class="icon-container">
+        <button mat-flat-button class="mat-flat-button" color="primary" (click)="clickPlay()" matTooltip="Click to play"
+            [matTooltipShowDelay]="showDelay.value" [matTooltipHideDelay]="hideDelay.value"
+            [disabled]="!canPlay()">Play</button>
+        <div *ngIf="connected; else notConnected">
+            <mat-icon color="primary" svgIcon="cloud" matTooltip="Connected" [matTooltipShowDelay]="showDelay.value"
+                [matTooltipHideDelay]="hideDelay.value">
+            </mat-icon>
+        </div>
+        <ng-template #notConnected>
+            <mat-icon color={{connectionColor}} svgIcon="cloud-off" matTooltip="Not connected"
+                [matTooltipShowDelay]="showDelay.value" [matTooltipHideDelay]="hideDelay.value">
+            </mat-icon>
+        </ng-template>
+        <div *ngIf="connected && !mark">
+            <mat-icon color="warn" svgIcon="hourglass-full" matTooltip="Waiting for an opponent"
+                [matTooltipShowDelay]="showDelay.value" [matTooltipHideDelay]="hideDelay.value">
+            </mat-icon>
+        </div>
+        <div class="players" *ngIf="mark && player.opponent" matTooltip={{playerTooltip()}}
+            [matTooltipClass]="playerTooltip" [matTooltipShowDelay]="showDelay.value"
+            [matTooltipHideDelay]="hideDelay.value">
+            <label class="player-label">you</label>
+            <mat-icon [ngClass]="enabled && !canPlay() ? 'player-go' : 'player-stop'" svgIcon={{mark}}></mat-icon>
+            <label class="player-label">{{player.opponent.name}}</label>
+            <mat-icon [ngClass]="enabled || canPlay() ? 'player-stop' : 'player-go'" svgIcon={{opponentMark}}>
+            </mat-icon>
+        </div>
     </div>
-    <ng-template #notConnected>
-      <mat-icon color={{connectionColor}} svgIcon="cloud-off"
-        matTooltip="Not connected" 
-        [matTooltipShowDelay]="showDelay.value"
-        [matTooltipHideDelay]="hideDelay.value">
-      </mat-icon>
-    </ng-template>
-    <div *ngIf="connected && !mark">
-      <mat-icon color="warn" svgIcon="hourglass-full"
-        matTooltip="Waiting for an opponent" 
-        [matTooltipShowDelay]="showDelay.value"
-        [matTooltipHideDelay]="hideDelay.value">
-      </mat-icon>
+    <div class=grid-container *ngIf="tiles.length > 0">
+        <app-tic-tac-toe-tile *ngFor="let tile of tiles;" (clicked)="tileClick($event)" [tile]=tile
+            [ngClass]="{'cursor-not-allowed': cursorClass === 'not-allowed', 'cursor-wait': cursorClass === 'wait' }">
+        </app-tic-tac-toe-tile>
     </div>
-    <div class="players" *ngIf="mark"
-        matTooltip={{playerTooltip()}}
-        [matTooltipClass]="playerTooltip"
-        [matTooltipShowDelay]="showDelay.value"
-        [matTooltipHideDelay]="hideDelay.value"> 
-      <label class="player-label">you</label>
-      <mat-icon [ngClass]="enabled && !canPlay() ? 'player-go' : 'player-stop'" svgIcon={{mark}}></mat-icon>
-      <label class="player-label">{{player.opponent.name}}</label>
-      <mat-icon [ngClass]="enabled || canPlay() ? 'player-stop' : 'player-go'" svgIcon={{opponentMark}}></mat-icon>
-    </div>
-  </div>
-  <div class=grid-container *ngIf="tiles.length > 0">
-    <app-tic-tac-toe-tile *ngFor="let tile of tiles;" (clicked)="tileClick($event)" [tile]=tile 
-      [ngClass]="{'cursor-not-allowed': cursorClass === 'not-allowed', 'cursor-wait': cursorClass === 'wait' }">
-    </app-tic-tac-toe-tile>
-  </div>
 </div>
