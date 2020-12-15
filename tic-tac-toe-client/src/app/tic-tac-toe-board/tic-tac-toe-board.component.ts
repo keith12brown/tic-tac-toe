@@ -169,14 +169,14 @@ export class TicTacToeBoardComponent implements OnInit {
     playerTooltip(): string {
         let result = '';
         if (this.player) {
-            if (this.opponent.quit) {
+            if (this.opponent?.quit) {
                 result = `You win. ${this.opponent.name} quit`;
             } else if (this.winner) {
                 result = this.winner === this.player ? 'You win' : `${this.opponent.name} wins`;
             } else if (this.tiles.every(t => t.mark ? true : false)) {
                 result = 'Tie';
             } else {
-                result = this.enabled ? 'Your turn' : `Waiting on ${this.opponent.name}`;
+                result = this.enabled ? 'Your turn' : `Waiting on ${this.opponent ? this.opponent.name : ' new opponent'}`;
             }
         }
         return result;
@@ -192,6 +192,8 @@ export class TicTacToeBoardComponent implements OnInit {
         } else {
             this.socket.registerPlayer(this.player);
         }
+        this.player.opponent = undefined;
+        this.player.mark = '';
         this.replay = false;
         this.clearBoard();
     }
