@@ -82,6 +82,7 @@ mat-form-field {
 
 .player-stop {
   fill: red;
+  cursor: wait;
 }
 
 .player-go {
