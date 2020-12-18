@@ -2,98 +2,96 @@ import { Injectable } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/internal-compatibility';
 import { ConfigurationService } from './configuration.service';
 import {
-  TicTacToeMessage as Message,
-  Move,
-  ConnectionStatus,
-  Player
+    TicTacToeMessage as Message,
+    Move,
+    ConnectionStatus,
+    Player,
+    createPlayer
 } from '../../projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class WebSocketService {
 
-  private socket$: WebSocketSubject<Message> = null;
+    private socket$: WebSocketSubject<Message> = null;
 
-  message$: Subject<string> = new Subject<string>();
+    message$: Subject<string> = new Subject<string>();
 
-  error$: Subject<string> = new Subject<string>();
+    error$: Subject<string> = new Subject<string>();
 
-  connected$: Subject<boolean> = new Subject<boolean>();
+    connected$: Subject<boolean> = new Subject<boolean>();
 
-  opponentConnected$: Subject<Player> = new Subject<Player>();
+    opponentConnected$: Subject<Player> = new Subject<Player>();
 
-  opponentMove$: Subject<Move> = new Subject<Move>();
+    opponentMove$: Subject<Move> = new Subject<Move>();
 
-  opponentQuit$: Subject<Player> = new Subject<Player>();
+    opponentQuit$: Subject<Player> = new Subject<Player>();
 
-  constructor(private config: ConfigurationService) {
-  }
-
-  connect() {
-    this.socket$ = new WebSocketSubject<Message>(this.config.getSocketUrl());
-    this.socket$.subscribe(
-      (message) => {
-        this.processMessage(message);
-        this.error$.next('');
-      },
-      (error: Event) => {
-        this.message$.next(`Failed to connect to server. ${(<WebSocket>error.target)}`);
-        this.error$.next('Failed to connect');
-      },
-      () => console.log('done')
-    );
-  }
-
-  send(message: Message) {
-    this.socket$.next(message);
-  }
-
-  processMessage(message: Message): void {
-    const content = message.content;
-    if (this.isConnectionStatus(content)) {
-      const connectionStatus = <ConnectionStatus>content;
-      let msg = 'Connection Error';
-      if (connectionStatus.success) {
-        msg = 'Connected';
-        this.connected$.next(true);
-      }
-      this.message$.next(`${msg} ${(<ConnectionStatus>content).message}`);
-    } else if (this.isPlayer(content)) {
-      const opponent = content as Player;
-      if (!opponent.quit) {
-        this.opponentConnected$.next(content);
-      } else {
-        this.opponentQuit$.next(content);
-      }
-    } else if (this.isMove(content)) {
-      this.opponentMove$.next(content);
-    } else if (typeof content === 'string') {
-      this.message$.next(<string>content);
+    constructor(private config: ConfigurationService) {
     }
-  }
 
-  registerPlayer(player: Player | string): void {
-    let name = '';
-    if (typeof player === 'string') {
-      name = <string>player;
-      player = { name: name, mark: undefined, quit: false };
-    } else {
-      name = (<Player>player).name;
+    connect() {
+        this.socket$ = new WebSocketSubject<Message>(this.config.getSocketUrl());
+        this.socket$.subscribe(
+            (message) => {
+                this.processMessage(message);
+                this.error$.next('');
+            },
+            (error: Event) => {
+                this.message$.next(`Failed to connect to server. ${(<WebSocket>error.target)}`);
+                this.error$.next('Failed to connect');
+            },
+            () => console.log('done')
+        );
     }
-    this.socket$.next({ content: player, sender: name });
-  }
 
-  isMove(message: Move |  ConnectionStatus | Player | string): message is Move {
-    return (<Move>message).col !== undefined;
-  }
+    send(message: Message) {
+        this.socket$.next(message);
+    }
 
-  isConnectionStatus(message: Move |  ConnectionStatus | Player | string): message is ConnectionStatus {
-    return (<ConnectionStatus>message).success !== undefined;
-  }
+    processMessage(message: Message): void {
+        console.log(JSON.stringify(message));
+        const content = message.content;
+        switch (content.kind) {
+            case 'connectionStatus': {
+                let msg = 'Connection Error';
+                if (content.success) {
+                    msg = 'Connected';
+                    this.connected$.next(true);
+                }
+                this.message$.next(`${msg} ${content.message}`);
+                break;
+            }
+            case 'player' : {
+                if (!content.quit) {
+                    this.opponentConnected$.next(content);
+                } else {
+                    this.opponentQuit$.next(content);
+                }
+                break;
+            }
+            case 'move' : {
+                this.opponentMove$.next(content);
+                break;
+            }
+            case 'info': {
+                this.message$.next(content.info);
+                break;
+            }
+        }
+    }
 
-  isPlayer(message: Move | ConnectionStatus | Player | string): message is Player {
-    return (<Player>message).opponent !== undefined;
-  }
+    registerPlayer(player: Player | string): void {
+        let name = '';
+        if (typeof player === 'string') {
+            name = player;
+            player = createPlayer( name, false );
+        } else {
+            name = name;
+        }
+        this.socket$.next({ content: player, sender: name });
+    }
 }
