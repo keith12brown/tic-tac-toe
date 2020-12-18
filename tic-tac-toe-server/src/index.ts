@@ -1,4 +1,3 @@
-//
 // This is a modification of https://github.com/JonnyFox/websocket-node-express
 //
 
@@ -6,7 +5,15 @@ import * as express from 'express';
 import * as http from 'http';
 import { AddressInfo } from 'ws';
 import * as WebSocket from 'ws';
-import { TicTacToeMessage as Message, Move, Player, ConnectionStatus } from './tic-tac-toe-message';
+import {
+    ConnectionStatus,
+    createConnectionStatus,
+    createInformation,
+    Information,
+    Move,
+    Player, 
+    TicTacToeMessage as Message,
+} from './tic-tac-toe-message';
 
 require('dotenv').config();
 
@@ -28,7 +35,7 @@ export class SocketWrapper {
     private onConnection(ws: WebSocket) {
         this.addHandlers(ws);
         (ws as ExtWebSocket).isAlive = true;
-        ws.send(this.createMessage({ success: true, message: "successful Connection" }));
+        ws.send(this.createMessage(createConnectionStatus( true, "successful Connection" )));
     }
 
     private addHandlers(ws: WebSocket): void {
@@ -68,7 +75,7 @@ export class SocketWrapper {
         player.opponent = undefined;
         ws.opponentSocket = undefined;
         console.log(`player registering ${ws.player.name}`);
-        let sendMessage = this.createMessage('Waiting for an opponent');
+        let sendMessage = this.createMessage(createInformation('Waiting for an opponent'), player.name);
         console.log(`current client ${ws.player.name}`);
         this.wss.clients
             .forEach(client => {
@@ -121,8 +128,9 @@ export class SocketWrapper {
         Move |
         Player |
         ConnectionStatus |
-        string,
-        sender = 'NS'): string {
+        Information,
+        sender = ''): string {
+        sender = sender ? sender : (this.isPlayer(content) ? content.name : 'server');
         const msg = new Message(content, sender);
         const cache = new WeakSet();
         return JSON.stringify(msg, (key, value) => {
@@ -136,12 +144,12 @@ export class SocketWrapper {
         });
     }
 
-    private isPlayer(message: Move | Player | ConnectionStatus | string): message is Player {
-        return (message as Player).name !== undefined;
+    private isPlayer(message: Move | Player | ConnectionStatus | Information): message is Player {
+        return message.kind === 'player';
     }
 
-    private isMove(message: Move | Player | ConnectionStatus | string): message is Player {
-        return (message as Move).col !== undefined;
+    private isMove(message: Move | Player | ConnectionStatus | Information): message is Player {
+        return message.kind === 'move';
     }
 }
 

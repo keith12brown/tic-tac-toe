@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { Move, Mark } from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
+import { Move, Mark, createMove } from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
 
 export class Tile {
@@ -24,7 +24,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
 
   @Input() tile: Tile;
 
-  @Output() clicked: EventEmitter<{ row: number, col: number }> = new EventEmitter();
+  @Output() clicked: EventEmitter<Move> = new EventEmitter();
 
   isInWinner = false;
 
@@ -36,7 +36,7 @@ export class TicTacToeTileComponent implements AfterViewInit {
   }
 
   onClick() {
-    this.clicked.emit({ row: this.tile.row, col: this.tile.col });
+      this.clicked.emit(createMove(this.tile.row, this.tile.col, this.tile.mark));
   }
 
   ngAfterViewInit(): void {

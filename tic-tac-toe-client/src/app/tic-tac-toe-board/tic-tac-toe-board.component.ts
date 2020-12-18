@@ -9,7 +9,10 @@ import {
     Move,
     Player,
     TicTacToeMessage,
-    Mark
+    Mark,
+    createConnectionStatus,
+    createPlayer,
+    createMove
 } from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { TicTacToeTileComponent, Tile } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -150,7 +153,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
         this.socket.connected$.subscribe(value => {
             this.connected = value;
-            this.player = { mark: undefined, name: this.playerName, quit: false };
+            this.player = createPlayer(this.playerName, false);
             this.socket.registerPlayer(this.player);
             this.replay = false;
         });
