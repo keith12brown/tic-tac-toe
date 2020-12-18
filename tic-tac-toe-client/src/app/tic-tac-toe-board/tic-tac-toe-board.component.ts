@@ -146,7 +146,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
         this.socket.error$.subscribe(error => error ? this.error = true : false);
 
-        this.socket.message$.subscribe(message => console.log(message));
+        this.socket.message$.subscribe(message => console.log(JSON.stringify(message)));
 
         this.socket.connected$.subscribe(value => {
             this.connected = value;
@@ -192,8 +192,10 @@ export class TicTacToeBoardComponent implements OnInit {
         } else {
             this.socket.registerPlayer(this.player);
         }
-        this.player.opponent = undefined;
-        this.player.mark = '';
+        if (this.player) {
+            this.player.opponent = undefined;
+            this.player.mark = '';
+        }
         this.replay = false;
         this.clearBoard();
     }
