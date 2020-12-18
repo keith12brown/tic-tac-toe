@@ -1,7 +1,7 @@
 export interface Move {
     row: number;
     col: number;
-    mark: string;
+    mark: Mark;
 }
 
 export interface Player {
