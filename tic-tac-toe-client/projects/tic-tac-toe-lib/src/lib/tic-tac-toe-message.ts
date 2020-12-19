@@ -33,7 +33,6 @@ export type Mark = 'X' | 'O' | '?' | '';
 
 export type MessageType = Move | Player | ConnectionStatus | Information;
 
-
 export function getMessageContent(message: MessageType): Move | Player | ConnectionStatus | Information {
     switch (message.kind) {
         case 'player':
