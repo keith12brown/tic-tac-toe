@@ -35,7 +35,7 @@ export class SocketWrapper {
     private onConnection(ws: WebSocket) {
         this.addHandlers(ws);
         (ws as ExtWebSocket).isAlive = true;
-        ws.send(this.createMessage(createConnectionStatus( true, "successful Connection" )));
+        ws.send(this.createMessage(createConnectionStatus({success: true, message: "successful Connection" })));
     }
 
     private addHandlers(ws: WebSocket): void {
@@ -75,7 +75,7 @@ export class SocketWrapper {
         player.opponent = undefined;
         ws.opponentSocket = undefined;
         console.log(`player registering ${ws.player.name}`);
-        let sendMessage = this.createMessage(createInformation('Waiting for an opponent'), player.name);
+        let sendMessage = this.createMessage(createInformation({info:'Waiting for an opponent'}), player.name);
         console.log(`current client ${ws.player.name}`);
         this.wss.clients
             .forEach(client => {
