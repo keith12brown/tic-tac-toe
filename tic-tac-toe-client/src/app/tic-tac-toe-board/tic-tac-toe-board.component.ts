@@ -1,8 +1,6 @@
 import {
     Component,
     OnInit,
-    Input,
-    Output
 } from '@angular/core';
 import { WebSocketService } from '../websocket.service';
 import {
@@ -10,17 +8,13 @@ import {
     Player,
     TicTacToeMessage,
     Mark,
-    createConnectionStatus,
     createPlayer,
-    createMove
 } from 'projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
-import { TicTacToeTileComponent, Tile } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
+import { Tile } from '../tic-tac-toe-tile/tic-tac-toe-tile.component';
 import { MatIconRegistry } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BoardEvaluateService } from '../board-evaluate.service';
 import { FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-tic-tac-toe-board',
@@ -89,10 +83,10 @@ export class TicTacToeBoardComponent implements OnInit {
     private replay = false;
 
     private _enabled = false;
-    public get enabled() {
+    public get enabled(): boolean {
         return this._enabled;
     }
-    public set enabled(value) {
+    public set enabled(value: boolean)  {
         this._enabled = value;
     }
 
@@ -140,7 +134,7 @@ export class TicTacToeBoardComponent implements OnInit {
         }
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.socket.opponentConnected$.subscribe(opp => {
             this.player.opponent = opp;
             this.player.mark = opp.mark === 'X' ? 'O' : 'X';
@@ -153,7 +147,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
         this.socket.connected$.subscribe(value => {
             this.connected = value;
-            this.player = createPlayer(this.playerName, false);
+            this.player = createPlayer({name: this.playerName, quit: false});
             this.socket.registerPlayer(this.player);
             this.replay = false;
         });
@@ -164,7 +158,7 @@ export class TicTacToeBoardComponent implements OnInit {
             this.enabled = !this.replay;
         });
 
-        this.socket.opponentQuit$.subscribe(oppQuit => {
+        this.socket.opponentQuit$.subscribe(() => {
             this.opponentQuit();
         });
     }
@@ -185,11 +179,11 @@ export class TicTacToeBoardComponent implements OnInit {
         return result;
     }
 
-    canPlay() {
+    canPlay(): boolean {
         return this.playerName && (!this.connected || this.replay);
     }
 
-    clickPlay() {
+    clickPlay(): void {
         if (!this.connected) {
             this.socket.connect();
         } else {
@@ -203,7 +197,7 @@ export class TicTacToeBoardComponent implements OnInit {
         this.clearBoard();
     }
 
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         const target = <HTMLInputElement>event.target;
         this.playerName = target.value;
         if (event.key === 'Enter' && this.canPlay()) {
@@ -211,7 +205,7 @@ export class TicTacToeBoardComponent implements OnInit {
         }
     }
 
-    tileClick(move: Move) {
+    tileClick(move: Move): void {
         const tile = this.findTile(move.row, move.col);
         if (this.enabled && !tile.mark) {
             tile.mark = this.mark;

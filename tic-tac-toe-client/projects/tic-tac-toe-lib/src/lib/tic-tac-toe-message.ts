@@ -47,21 +47,23 @@ export function getMessageContent(message: MessageType): Move | Player | Connect
     }
 }
 
-export function createMove(row: number, col: number, mark: Mark): Move {
-    return { kind: 'move', row: row, col: col, mark: mark };
+export function createMove(args: { row: number, col: number, mark: Mark }): Move {
+    return { kind: 'move', ...args };
 }
 
-export function createPlayer(name: string,
+export function createPlayer(args: {
+    name: string,
     quit: boolean,
     opponent?: Player,
-    mark?: Mark): Player {
-    return { kind: 'player', name: name, quit: quit, opponent: opponent, mark: mark };
+    mark?: Mark
+}): Player {
+    return { kind: 'player', ...args };
 }
 
-export function createConnectionStatus(success: boolean, message?: string): ConnectionStatus {
-    return { kind: 'connectionStatus', success: success, message: message };
+export function createConnectionStatus(args: { success: boolean, message?: string }): ConnectionStatus {
+    return { kind: 'connectionStatus', ...args };
 }
 
-export function createInformation(info: string): Information {
-    return { kind: 'info', info: info };
+export function createInformation(args: { info: string }): Information {
+    return { kind: 'info', ...args };
 }

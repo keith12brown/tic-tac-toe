@@ -4,12 +4,10 @@ import { ConfigurationService } from './configuration.service';
 import {
     TicTacToeMessage as Message,
     Move,
-    ConnectionStatus,
     Player,
     createPlayer
 } from '../../projects/tic-tac-toe-lib/src/lib/tic-tac-toe-message';
 import { Subject } from 'rxjs';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +31,7 @@ export class WebSocketService {
     constructor(private config: ConfigurationService) {
     }
 
-    connect() {
+    connect(): void {
         this.socket$ = new WebSocketSubject<Message>(this.config.getSocketUrl());
         this.socket$.subscribe(
             (message) => {
@@ -48,7 +46,7 @@ export class WebSocketService {
         );
     }
 
-    send(message: Message) {
+    send(message: Message): void {
         this.socket$.next(message);
     }
 
@@ -88,9 +86,9 @@ export class WebSocketService {
         let name = '';
         if (typeof player === 'string') {
             name = player;
-            player = createPlayer( name, false );
+            player = createPlayer( {name: name, quit: false} );
         } else {
-            name = name;
+            name = player.name;
         }
         this.socket$.next({ content: player, sender: name });
     }
