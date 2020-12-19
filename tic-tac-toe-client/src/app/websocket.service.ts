@@ -28,8 +28,7 @@ export class WebSocketService {
 
     opponentQuit$: Subject<Player> = new Subject<Player>();
 
-    constructor(private config: ConfigurationService) {
-    }
+    constructor(private config: ConfigurationService) { }
 
     connect(): void {
         this.socket$ = new WebSocketSubject<Message>(this.config.getSocketUrl());
@@ -39,7 +38,7 @@ export class WebSocketService {
                 this.error$.next('');
             },
             (error: Event) => {
-                this.message$.next(`Failed to connect to server. ${(<WebSocket>error.target)}`);
+                this.message$.next(`Failed to connect to server. ${error.target}`);
                 this.error$.next('Failed to connect');
             },
             () => console.log('done')
