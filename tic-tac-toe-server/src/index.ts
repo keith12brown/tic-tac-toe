@@ -11,7 +11,7 @@ import {
     createInformation,
     Information,
     Move,
-    Player, 
+    Player,
     TicTacToeMessage as Message,
 } from './tic-tac-toe-message';
 
@@ -36,7 +36,7 @@ export class SocketWrapper {
     private onConnection(ws: WebSocket) {
         this.addHandlers(ws);
         (ws as ExtWebSocket).isAlive = true;
-        ws.send(this.createMessage(createConnectionStatus({success: true, message: "successful Connection" })));
+        ws.send(this.createMessage(createConnectionStatus({ success: true, message: "successful Connection" })));
     }
 
     private addHandlers(ws: WebSocket): void {
@@ -76,7 +76,7 @@ export class SocketWrapper {
         player.opponent = undefined;
         ws.opponentSocket = undefined;
         console.log(`player registering ${ws.player.name}`);
-        let sendMessage = this.createMessage(createInformation({info:'Waiting for an opponent'}), player.name);
+        let sendMessage = this.createMessage(createInformation({ info: 'Waiting for an opponent' }), player.name);
         console.log(`current client ${ws.player.name}`);
         this.wss.clients
             .forEach(client => {
@@ -103,10 +103,12 @@ export class SocketWrapper {
         }
     }
 
-    private processMoveMessage(ws: ExtWebSocket, move: Move) {
+    private processMoveMessage(ws: ExtWebSocket, move: Move): void {
         const msg = this.createMessage(move);
         console.log(`send move ${msg}`);
-        ws.opponentSocket!.send(msg);
+        if (ws.opponentSocket) {
+            ws.opponentSocket.send(msg);
+        }
     }
 
     private setPing(): void {
@@ -160,4 +162,4 @@ interface ExtWebSocket extends WebSocket {
     opponentSocket?: WebSocket;
 }
 
-const socket = new SocketWrapper();
+new SocketWrapper();
