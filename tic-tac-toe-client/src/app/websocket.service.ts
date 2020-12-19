@@ -63,7 +63,7 @@ export class WebSocketService {
                 this.message$.next(`${msg} ${content.message}`);
                 break;
             }
-            case 'player' : {
+            case 'player': {
                 if (!content.quit) {
                     this.opponentConnected$.next(content);
                 } else {
@@ -71,7 +71,7 @@ export class WebSocketService {
                 }
                 break;
             }
-            case 'move' : {
+            case 'move': {
                 this.opponentMove$.next(content);
                 break;
             }
@@ -86,7 +86,7 @@ export class WebSocketService {
         let name = '';
         if (typeof player === 'string') {
             name = player;
-            player = createPlayer( {name: name, quit: false} );
+            player = createPlayer({ name: name, quit: false });
         } else {
             name = player.name;
         }
