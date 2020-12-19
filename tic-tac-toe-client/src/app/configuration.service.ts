@@ -6,7 +6,6 @@ import * as config from '../assets/config.json';
 })
 export class ConfigurationService {
   private socketUrl = 'ws://localhost:8999';
-  constructor() { }
 
   getSocketUrl(): string {
     if (config.socketUrl) {
