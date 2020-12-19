@@ -15,6 +15,7 @@ import {
     TicTacToeMessage as Message,
 } from './tic-tac-toe-message';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 export class SocketWrapper {
