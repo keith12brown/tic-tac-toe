@@ -10,8 +10,8 @@
 
 @media screen and (max-width: 632px) {
   #container {
-    width: 90%;
-    height: 80%;
+    width: 98vw;
+    height: 120vw;
     align-self: center;
   }
 }
