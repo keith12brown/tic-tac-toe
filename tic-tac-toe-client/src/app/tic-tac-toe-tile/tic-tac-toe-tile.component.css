@@ -1,36 +1,36 @@
 .grid-cell {
-  display: auto;
-  box-sizing: border-box; 
-  border:  none;
-  padding-top: 0;
-  padding-bottom: 30px;
-  font-size: 200px;
-  height: 200px;
-  margin: auto;
-  /* align-items: center; */
-  line-height: 100%;
-  text-align: center;
+    display        : flex;
+    box-sizing     : border-box;
+    border         : none;
+    padding        : auto;
+    font-size      : 200px;
+    height         : 200px;
+    margin         : auto;
+    justify-content: center;
+    align-items    : center;
 }
 
 @media screen and (max-width: 632px) {
-  .grid-cell {
-    font-size: 120px;
-    height: 120px;
-    line-height: 100%;
-  }
+    .grid-cell {
+        font-size      : 30vw;
+        height         : 33vw;
+        width          : 33vw;
+        justify-content: center;
+        align-items    : center;
+    }
 }
 
 
 @media screen and (max-height: 632px) and (orientation: landscape) {
-  .grid-cell {
-    font-size: 85px;
-  }
+    .grid-cell {
+        font-size: 85px;
+    }
 }
 
 .grid-cell.cell-in-winner {
-  color: red;
+    color: goldenrod;
 }
 
 :hover.cursor-not-allowed {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
