@@ -46,14 +46,14 @@ export class TicTacToeBoardComponent implements OnInit {
         if (this.winner === this.player) {
             return 'player-winner';
         }
-        return !this.canPlay() ? (this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
+        return this.enabled ? 'player-go' : 'player-stop';
     }
 
     public get oppPlayerState(): string {
         if (this.winner === this.player.opponent) {
             return 'player-winner';
         }
-        return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
+        return !this.enabled ? 'player-go' : 'player-stop';
     }
 
     private playerName = '';
@@ -76,9 +76,7 @@ export class TicTacToeBoardComponent implements OnInit {
             returnValue = 'not-allowed';
         } else if (!this.enabled && this.mark) {
             returnValue = 'wait';
-        } else {
-            returnValue = '';
-        }
+        } 
         return returnValue;
     }
 
@@ -237,6 +235,7 @@ export class TicTacToeBoardComponent implements OnInit {
         this.player.opponent.quit = true;
         this.enabled = false;
         this.gameOver = true;
+        this.winner = this.player;
     }
 
     private findTile(row: number, col: number): Tile {
