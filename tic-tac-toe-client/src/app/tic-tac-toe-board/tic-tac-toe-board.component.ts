@@ -42,13 +42,27 @@ export class TicTacToeBoardComponent implements OnInit {
         return this.player && this.opponent ? this.opponent.mark : '';
     }
 
-    public get thisPlayerGoStop(): string {
+    public get thisPlayerState(): string {
+        if (this.winner === this.player) {
+            return 'player-winner';
+        }
         return !this.canPlay() ? (this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
     }
 
-    public get oppPlayerGoStop(): string {
+    public get oppPlayerState(): string {
+        if (this.winner === this.player.opponent) {
+            return 'player-winner';
+        }
         return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
     }
+
+    // public get thisPlayerGoStop(): string {
+    //     return !this.canPlay() ? (this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
+    // }
+
+    // public get oppPlayerGoStop(): string {
+    //     return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
+    // }
 
     private playerName = '';
 
