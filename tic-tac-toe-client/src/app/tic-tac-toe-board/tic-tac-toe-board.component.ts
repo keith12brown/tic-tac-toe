@@ -56,14 +56,6 @@ export class TicTacToeBoardComponent implements OnInit {
         return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
     }
 
-    // public get thisPlayerGoStop(): string {
-    //     return !this.canPlay() ? (this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
-    // }
-
-    // public get oppPlayerGoStop(): string {
-    //     return !this.canPlay() ? (!this.enabled ? 'player-go' : 'player-stop') : 'player-stop';
-    // }
-
     private playerName = '';
 
     private _connectionColor: string;
@@ -94,7 +86,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
     private error = false;
 
-    private replay = false;
+    private gameOver = false;
 
     private _enabled = false;
     public get enabled(): boolean {
@@ -163,13 +155,13 @@ export class TicTacToeBoardComponent implements OnInit {
             this.connected = value;
             this.player = createPlayer({name: this.playerName, quit: false});
             this.socket.registerPlayer(this.player);
-            this.replay = false;
+            this.gameOver = false;
         });
 
         this.socket.opponentMove$.subscribe(oppMove => {
             this.setTile(oppMove);
             this.detectWinner(oppMove);
-            this.enabled = !this.replay;
+            this.enabled = !this.gameOver;
         });
 
         this.socket.opponentQuit$.subscribe(() => {
@@ -194,7 +186,7 @@ export class TicTacToeBoardComponent implements OnInit {
     }
 
     canPlay(): boolean {
-        return this.playerName && (!this.connected || this.replay);
+        return this.playerName && (!this.connected || this.gameOver);
     }
 
     clickPlay(): void {
@@ -207,7 +199,7 @@ export class TicTacToeBoardComponent implements OnInit {
             this.player.opponent = undefined;
             this.player.mark = '';
         }
-        this.replay = false;
+        this.gameOver = false;
         this.clearBoard();
     }
 
@@ -244,7 +236,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
         this.player.opponent.quit = true;
         this.enabled = false;
-        this.replay = true;
+        this.gameOver = true;
     }
 
     private findTile(row: number, col: number): Tile {
@@ -276,7 +268,7 @@ export class TicTacToeBoardComponent implements OnInit {
         }
 
         if (result || this.tiles.every(t => t.mark ? true : false)) {
-            this.replay = true;
+            this.gameOver = true;
         }
     }
 }
