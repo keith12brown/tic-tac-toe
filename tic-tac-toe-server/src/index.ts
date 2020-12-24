@@ -104,7 +104,7 @@ export class SocketWrapper {
     }
 
     private processMoveMessage(ws: ExtWebSocket, move: Move): void {
-        const msg = this.createMessage(move);
+        const msg = this.createMessage(move, ws.player.name);
         console.log(`send move ${msg}`);
         if (ws.opponentSocket) {
             ws.opponentSocket.send(msg);
