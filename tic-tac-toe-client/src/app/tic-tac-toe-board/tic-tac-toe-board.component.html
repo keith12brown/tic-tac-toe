@@ -25,9 +25,9 @@
             [matTooltipClass]="playerTooltip" [matTooltipShowDelay]="showDelay.value"
             [matTooltipHideDelay]="hideDelay.value">
             <label class="player-label">you</label>
-            <mat-icon [ngClass]="thisPlayerGoStop" svgIcon={{mark}}></mat-icon>
+            <mat-icon [ngClass]="thisPlayerState" svgIcon={{mark}}></mat-icon>
             <label class="player-label">{{player.opponent.name}}</label>
-            <mat-icon [ngClass]="oppPlayerGoStop" svgIcon={{opponentMark}}>
+            <mat-icon [ngClass]="oppPlayerState" svgIcon={{opponentMark}}>
             </mat-icon>
         </div>
     </div>
