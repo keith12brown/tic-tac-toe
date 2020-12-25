@@ -27,7 +27,9 @@ export class TicTacToeBoardComponent implements OnInit {
 
     private tiles: Tile[] = new Array<Tile>();
 
+    // tooltip show delay
     showDelay = new FormControl(500);
+    // tooltip hide delay
     hideDelay = new FormControl(1000);
 
     private get opponent(): Player | undefined {
