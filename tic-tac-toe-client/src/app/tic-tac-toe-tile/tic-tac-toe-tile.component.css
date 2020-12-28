@@ -2,7 +2,7 @@
     display        : flex;
     box-sizing     : border-box;
     border         : none;
-    padding        : auto;
+    padding        : 20%;
     font-size      : 200px;
     height         : 200px;
     margin         : auto;
@@ -10,20 +10,27 @@
     align-items    : center;
 }
 
-@media screen and (max-width: 632px) {
+@media screen and (max-height: 411) /*and (orientation: landscape)*/ {
     .grid-cell {
-        font-size      : 30vw;
+        display        : inherit;
+        font-size      : 20px;
+        height         : 33vh;
+        width          : 33vh;
+        justify-content: center;
+        align-items    : center;
+
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .grid-cell {
+        display        : inherit;
+        font-size      : 33vw;
         height         : 33vw;
         width          : 33vw;
         justify-content: center;
         align-items    : center;
-    }
-}
 
-
-@media screen and (max-height: 632px) and (orientation: landscape) {
-    .grid-cell {
-        font-size: 85px;
     }
 }
 
