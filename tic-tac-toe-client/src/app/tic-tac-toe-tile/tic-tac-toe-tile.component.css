@@ -1,38 +1,45 @@
 .grid-cell {
-    display        : flex;
+    display        : block;
     box-sizing     : border-box;
     border         : none;
-    padding        : 20%;
-    font-size      : 200px;
+    padding        : 5px;
     height         : 200px;
     margin         : auto;
     justify-content: center;
     align-items    : center;
 }
 
-@media screen and (max-height: 411) /*and (orientation: landscape)*/ {
+@media screen and (max-height: 411) and (orientation: landscape) {
     .grid-cell {
         display        : inherit;
-        font-size      : 20px;
-        height         : 33vh;
-        width          : 33vh;
+        height         : 20vh;
+        width          : 20vh;
         justify-content: center;
         align-items    : center;
-
     }
 }
 
 @media screen and (max-width: 420px) {
     .grid-cell {
         display        : inherit;
-        font-size      : 33vw;
-        height         : 33vw;
-        width          : 33vw;
+        height         : 25vw;
+        width          : 25vw;
+        padding        : 1px;
         justify-content: center;
         align-items    : center;
 
     }
 }
+
+mat-icon {
+    display        : block;
+    width          : fit-content;
+    height         : fit-content;
+    margin         : auto;
+    justify-content: center;
+    align-items    : center;
+}
+
 
 .grid-cell.cell-in-winner {
     color: goldenrod;
