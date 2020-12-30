@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class=grid-container *ngIf="tiles.length > 0">
-        <app-tic-tac-toe-tile *ngFor="let tile of tiles;" (clicked)="tileClick($event)" [tile]=tile
+        <app-tic-tac-toe-tile *ngFor="let tile of tiles;" (clicked)="tileClick($event)" [tile]=tile [player]=player
             [ngClass]="{'cursor-not-allowed': cursorClass === 'not-allowed', 'cursor-wait': cursorClass === 'wait' }">
         </app-tic-tac-toe-tile>
     </div>

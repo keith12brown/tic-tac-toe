@@ -41,6 +41,10 @@ mat-icon {
     color: goldenrod;
 }
 
+.grid-cell.cell-in-quitter {
+    color: red;
+}
+
 :hover.cursor-not-allowed {
     cursor: not-allowed;
 }

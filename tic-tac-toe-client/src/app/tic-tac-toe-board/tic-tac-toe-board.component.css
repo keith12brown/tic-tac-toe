@@ -89,6 +89,11 @@ mat-icon {
     cursor: wait;
 }
 
+.player-quit {
+    fill  : red;
+    cursor: wait;
+}
+
 .player-go {
     fill: green;
 }

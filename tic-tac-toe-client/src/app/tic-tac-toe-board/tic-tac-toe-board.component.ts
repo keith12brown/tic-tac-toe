@@ -54,6 +54,8 @@ export class TicTacToeBoardComponent implements OnInit {
     public get oppPlayerState(): string {
         if (this.winner === this.player.opponent) {
             return 'player-winner';
+        } else if (this.player.opponent.quit) {
+            return 'player-quit';
         }
         return !this.enabled ? 'player-go' : 'player-stop';
     }
@@ -230,7 +232,7 @@ export class TicTacToeBoardComponent implements OnInit {
 
         this.tiles.forEach(t => {
             if (t.mark === this.opponentMark) {
-                t.mark = '?';
+                t.isQuitter$.next(true);
             }
         });
 
