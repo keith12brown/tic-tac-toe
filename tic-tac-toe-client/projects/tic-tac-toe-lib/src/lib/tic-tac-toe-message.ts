@@ -4,6 +4,7 @@ export interface Move {
     row: number;
     col: number;
     mark: Mark;
+    player: Player;
 }
 
 export interface Player {
@@ -46,7 +47,7 @@ export function getMessageContent(message: MessageType): Move | Player | Connect
     }
 }
 
-export function createMove(args: { row: number, col: number, mark: Mark }): Move {
+export function createMove(args: { row: number, col: number, mark: Mark, player: Player }): Move {
     return { kind: 'move', ...args };
 }
 
