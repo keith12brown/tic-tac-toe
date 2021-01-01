@@ -14,6 +14,7 @@ export class Tile {
     clear(): void {
         this.mark = undefined;
         this.isWinner$.next(false);
+        this.isQuitter$.next(false);
     }
 }
 
